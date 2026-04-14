@@ -1168,7 +1168,7 @@ let boughtShirts=new Set(['default']);
 let boughtPants=new Set(['default']);
 let equippedVest='default';
 let boughtVests=new Set(['default']);
-let extraTimeBought1=false,extraTimeBought2=false,extraTimeBought3=false;
+let extraTimeBought1=false,extraTimeBought2=false,extraTimeBought3=false,extraTimeBought4=false;
 
 // ── Level intro speech bubble ─────────────────────────────────
 const LEVEL_MESSAGES={
@@ -1486,7 +1486,7 @@ function doLevelUp(){
   stopMusic();
   showMobileControls(false);
   // Reset timer immediately so HUD shows 2:00 on the level-up screen
-  levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0);
+  levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0)+(extraTimeBought4?20:0);
   const _mm=Math.floor(levelTimeLeft/60),_ss=Math.floor(levelTimeLeft%60);
   document.getElementById('timerval').textContent=_mm+':'+(String(_ss).padStart(2,'0'));
   document.getElementById('timerval').style.color='#ff6644';
@@ -1693,80 +1693,109 @@ function openBank(){
   const allMainBought = bigMopBought && autoSystemBought && sprinklers.length>=10
     && boughtHats.size>1 && boughtVests.size>1 && boughtShirts.size>1 && boughtPants.size>1;
   const EXTRA_TIME_COST = 20000;
-  const canBuyExtraTime1 = currentLevel>=7 && allMainBought && bankTotal>=EXTRA_TIME_COST && !extraTimeBought1;
-  const canBuyExtraTime2 = currentLevel>=9 && allMainBought && bankTotal>=EXTRA_TIME_COST && extraTimeBought1 && !extraTimeBought2;
+  const canBuyET1 = currentLevel>=7 && allMainBought && bankTotal>=EXTRA_TIME_COST && !extraTimeBought1;
+  const canBuyET2 = currentLevel>=8 && allMainBought && bankTotal>=EXTRA_TIME_COST && extraTimeBought1 && !extraTimeBought2;
+  const canBuyET3 = currentLevel>=9 && allMainBought && bankTotal>=EXTRA_TIME_COST && extraTimeBought2 && !extraTimeBought3;
+  const canBuyET4 = currentLevel>=10 && allMainBought && bankTotal>=EXTRA_TIME_COST && extraTimeBought3 && !extraTimeBought4;
 
   if(allMainBought && currentLevel>=7){
     shopHTML+=`<div style="border-top:1px solid rgba(255,215,0,0.2);padding-top:16px;margin-bottom:16px">
       <div style="color:#ffcc44;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">⏱ Extra Time</div>`;
 
+    // ─ 1st extra time (level 7) ─
     if(!extraTimeBought1){
       shopHTML+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:rgba(255,200,0,0.06);border:1px solid rgba(255,200,0,0.35);border-radius:8px">
         <div style="font-size:28px">⏱</div>
-        <div style="flex:1"><div style="color:#ffdd44;font-weight:bold">Extra Time +20s</div>
-          <div style="color:#88aacc;font-size:11px">Add 20 seconds to every future level timer. Clock will show 2:20.</div>
+        <div style="flex:1"><div style="color:#ffdd44;font-weight:bold">Extra Time +20s (1st)</div>
+          <div style="color:#88aacc;font-size:11px">Add 20 seconds. Clock will show 2:20.</div>
           <div style="color:#ffaa44;font-size:11px;margin-top:3px">Cost: ${EXTRA_TIME_COST.toLocaleString()} pts (one time)</div></div>
-        <button onclick="buyExtraTime1()" ${canBuyExtraTime1?'':'disabled'}
-          style="padding:8px 14px;border:none;border-radius:6px;cursor:${canBuyExtraTime1?'pointer':'not-allowed'};
-          background:${canBuyExtraTime1?'linear-gradient(135deg,#ffdd44,#cc9900)':'rgba(80,80,80,0.5)'};
-          color:${canBuyExtraTime1?'#000':'#666'};font-weight:bold;font-size:12px;font-family:inherit;white-space:nowrap">
-          ${bankTotal<EXTRA_TIME_COST?'Need '+EXTRA_TIME_COST.toLocaleString()+' pts':'Buy +20s'}</button>
+        <button onclick="buyExtraTime1()" ${canBuyET1?'':'disabled'}
+          style="padding:8px 14px;border:none;border-radius:6px;cursor:${canBuyET1?'pointer':'not-allowed'};
+          background:${canBuyET1?'linear-gradient(135deg,#ffdd44,#cc9900)':'rgba(80,80,80,0.5)'};
+          color:${canBuyET1?'#000':'#666'};font-weight:bold;font-size:12px;font-family:inherit;white-space:nowrap">
+          ${bankTotal<EXTRA_TIME_COST?'Need pts':'Buy +20s'}</button>
       </div>`;
     } else {
       shopHTML+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:rgba(0,255,100,0.08);border:1px solid rgba(0,255,100,0.25);border-radius:8px">
         <div style="font-size:28px">⏱</div>
-        <div style="flex:1"><div style="color:#44ff88;font-weight:bold">Extra Time +20s</div>
-          <div style="color:#88aacc;font-size:11px">Purchased ✓ — Level timer is now 2:20</div></div>
+        <div style="flex:1"><div style="color:#44ff88;font-weight:bold">Extra Time +20s (1st)</div>
+          <div style="color:#88aacc;font-size:11px">Purchased ✓ — Timer is now 2:20</div></div>
       </div>`;
     }
 
-    if(currentLevel>=9){
+    // ─ 2nd extra time (level 8) ─
+    if(currentLevel>=8){
       if(!extraTimeBought2){
         shopHTML+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:rgba(255,200,0,0.06);border:1px solid rgba(255,200,0,0.35);border-radius:8px">
           <div style="font-size:28px">⏱</div>
           <div style="flex:1"><div style="color:#ffdd44;font-weight:bold">Extra Time +20s (2nd)</div>
             <div style="color:#88aacc;font-size:11px">Add another 20 seconds. Clock will show 2:40.</div>
             <div style="color:#ffaa44;font-size:11px;margin-top:3px">Cost: ${EXTRA_TIME_COST.toLocaleString()} pts (one time)</div></div>
-          <button onclick="buyExtraTime2()" ${canBuyExtraTime2?'':'disabled'}
-            style="padding:8px 14px;border:none;border-radius:6px;cursor:${canBuyExtraTime2?'pointer':'not-allowed'};
-            background:${canBuyExtraTime2?'linear-gradient(135deg,#ffdd44,#cc9900)':'rgba(80,80,80,0.5)'};
-            color:${canBuyExtraTime2?'#000':'#666'};font-weight:bold;font-size:12px;font-family:inherit;white-space:nowrap">
-            ${bankTotal<EXTRA_TIME_COST?'Need '+EXTRA_TIME_COST.toLocaleString()+' pts':'Buy +20s'}</button>
+          <button onclick="buyExtraTime2()" ${canBuyET2?'':'disabled'}
+            style="padding:8px 14px;border:none;border-radius:6px;cursor:${canBuyET2?'pointer':'not-allowed'};
+            background:${canBuyET2?'linear-gradient(135deg,#ffdd44,#cc9900)':'rgba(80,80,80,0.5)'};
+            color:${canBuyET2?'#000':'#666'};font-weight:bold;font-size:12px;font-family:inherit;white-space:nowrap">
+            ${bankTotal<EXTRA_TIME_COST?'Need pts':'Buy +20s'}</button>
         </div>`;
       } else {
         shopHTML+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:rgba(0,255,100,0.08);border:1px solid rgba(0,255,100,0.25);border-radius:8px">
           <div style="font-size:28px">⏱</div>
           <div style="flex:1"><div style="color:#44ff88;font-weight:bold">Extra Time +20s (2nd)</div>
-            <div style="color:#88aacc;font-size:11px">Purchased ✓ — Level timer is now 2:40</div></div>
+            <div style="color:#88aacc;font-size:11px">Purchased ✓ — Timer is now 2:40</div></div>
         </div>`;
       }
     } else {
-      shopHTML+=`<div style="color:#556677;font-size:12px;padding:8px">🔒 2nd Extra Time — unlocks at Level 9</div>`
+      shopHTML+=`<div style="color:#556677;font-size:12px;padding:8px">🔒 2nd Extra Time — unlocks at Level 8</div>`;
     }
 
-    if(currentLevel>=10){
-      const canBuyExtraTime3 = allMainBought && bankTotal>=EXTRA_TIME_COST && extraTimeBought2 && !extraTimeBought3;
+    // ─ 3rd extra time (level 9) ─
+    if(currentLevel>=9){
       if(!extraTimeBought3){
         shopHTML+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:rgba(255,200,0,0.06);border:1px solid rgba(255,200,0,0.35);border-radius:8px">
           <div style="font-size:28px">⏱</div>
           <div style="flex:1"><div style="color:#ffdd44;font-weight:bold">Extra Time +20s (3rd)</div>
             <div style="color:#88aacc;font-size:11px">Add another 20 seconds. Clock will show 3:00.</div>
-            <div style="color:#ffaa44;font-size:11px;margin-top:3px">Cost: \${EXTRA_TIME_COST.toLocaleString()} pts (one time)</div></div>
-          <button onclick="buyExtraTime3()" \${canBuyExtraTime3?'':'disabled'}
-            style="padding:8px 14px;border:none;border-radius:6px;cursor:\${canBuyExtraTime3?'pointer':'not-allowed'};
-            background:\${canBuyExtraTime3?'linear-gradient(135deg,#ffdd44,#cc9900)':'rgba(80,80,80,0.5)'};
-            color:\${canBuyExtraTime3?'#000':'#666'};font-weight:bold;font-size:12px;font-family:inherit;white-space:nowrap">
-            \${bankTotal<EXTRA_TIME_COST?'Need pts':'Buy +20s'}</button>
+            <div style="color:#ffaa44;font-size:11px;margin-top:3px">Cost: ${EXTRA_TIME_COST.toLocaleString()} pts (one time)</div></div>
+          <button onclick="buyExtraTime3()" ${canBuyET3?'':'disabled'}
+            style="padding:8px 14px;border:none;border-radius:6px;cursor:${canBuyET3?'pointer':'not-allowed'};
+            background:${canBuyET3?'linear-gradient(135deg,#ffdd44,#cc9900)':'rgba(80,80,80,0.5)'};
+            color:${canBuyET3?'#000':'#666'};font-weight:bold;font-size:12px;font-family:inherit;white-space:nowrap">
+            ${bankTotal<EXTRA_TIME_COST?'Need pts':'Buy +20s'}</button>
         </div>`;
       } else {
         shopHTML+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:rgba(0,255,100,0.08);border:1px solid rgba(0,255,100,0.25);border-radius:8px">
           <div style="font-size:28px">⏱</div>
           <div style="flex:1"><div style="color:#44ff88;font-weight:bold">Extra Time +20s (3rd)</div>
-            <div style="color:#88aacc;font-size:11px">Purchased ✓ — Level timer is now 3:00</div></div>
+            <div style="color:#88aacc;font-size:11px">Purchased ✓ — Timer is now 3:00</div></div>
         </div>`;
       }
     } else {
-      shopHTML+=`<div style="color:#556677;font-size:12px;padding:8px">🔒 3rd Extra Time — unlocks at Level 10</div>`;;
+      shopHTML+=`<div style="color:#556677;font-size:12px;padding:8px">🔒 3rd Extra Time — unlocks at Level 9</div>`;
+    }
+
+    // ─ 4th extra time (level 10) ─
+    if(currentLevel>=10){
+      if(!extraTimeBought4){
+        shopHTML+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:rgba(255,200,0,0.06);border:1px solid rgba(255,200,0,0.35);border-radius:8px">
+          <div style="font-size:28px">⏱</div>
+          <div style="flex:1"><div style="color:#ffdd44;font-weight:bold">Extra Time +20s (4th)</div>
+            <div style="color:#88aacc;font-size:11px">Add another 20 seconds. Clock will show 3:20.</div>
+            <div style="color:#ffaa44;font-size:11px;margin-top:3px">Cost: ${EXTRA_TIME_COST.toLocaleString()} pts (one time)</div></div>
+          <button onclick="buyExtraTime4()" ${canBuyET4?'':'disabled'}
+            style="padding:8px 14px;border:none;border-radius:6px;cursor:${canBuyET4?'pointer':'not-allowed'};
+            background:${canBuyET4?'linear-gradient(135deg,#ffdd44,#cc9900)':'rgba(80,80,80,0.5)'};
+            color:${canBuyET4?'#000':'#666'};font-weight:bold;font-size:12px;font-family:inherit;white-space:nowrap">
+            ${bankTotal<EXTRA_TIME_COST?'Need pts':'Buy +20s'}</button>
+        </div>`;
+      } else {
+        shopHTML+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:rgba(0,255,100,0.08);border:1px solid rgba(0,255,100,0.25);border-radius:8px">
+          <div style="font-size:28px">⏱</div>
+          <div style="flex:1"><div style="color:#44ff88;font-weight:bold">Extra Time +20s (4th)</div>
+            <div style="color:#88aacc;font-size:11px">Purchased ✓ — Timer is now 3:20</div></div>
+        </div>`;
+      }
+    } else {
+      shopHTML+=`<div style="color:#556677;font-size:12px;padding:8px">🔒 4th Extra Time — unlocks at Level 10</div>`;
     }
 
     shopHTML+=`</div>`;
@@ -1888,6 +1917,38 @@ function openBank(){
     cosHTML+=`</div></div>`;
   } else {
     cosHTML+=`<div style="padding:10px;background:rgba(80,80,80,0.15);border:1px solid rgba(80,80,80,0.3);border-radius:8px;margin-bottom:10px;color:#556677;font-size:12px">🔒 Pants colours — unlocks after finishing Level 4</div>`;
+  }
+
+
+  // ─ Tiger Uniform ─
+  const allColorsOwned = ['blue','green','purple','red'].every(k =>
+    boughtHats.has(k) && boughtShirts.has(k) && boughtVests.has(k) && boughtPants.has(k)
+  );
+  if (allColorsOwned) {
+    const tigerEquipped = equippedHat==='tiger'&&equippedShirt==='tiger'&&equippedVest==='tiger'&&equippedPants==='tiger';
+    cosHTML += `<div style="border-top:1px solid rgba(255,140,0,0.4);margin-top:16px;padding-top:14px;">
+      <div style="color:#ff8800;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🐯 Tiger Uniform</div>
+      ${tigerUniformBought
+        ? `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,140,0,0.08);border:1px solid rgba(255,140,0,0.4);border-radius:8px;cursor:pointer" onclick="equipTigerUniform()">
+            <div style="width:28px;height:28px;background:linear-gradient(135deg,#ff8800,#111);border-radius:4px;border:2px solid #ff8800;flex-shrink:0"></div>
+            <div style="flex:1"><div style="color:#ff8800;font-weight:bold;font-size:12px">Tiger Uniform 🐯</div>
+            <div style="color:#aaa;font-size:10px">Hat + Shirt + Vest + Pants</div></div>
+            <div style="font-size:11px;color:${tigerEquipped?'#44ff88':'#aaa'}">${tigerEquipped?'✓ Equipped':'Equip'}</div>
+          </div>`
+        : `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,140,0,0.06);border:1px solid rgba(255,140,0,0.35);border-radius:8px">
+            <div style="width:28px;height:28px;background:linear-gradient(135deg,#ff8800,#111);border-radius:4px;border:2px solid rgba(255,140,0,0.5);flex-shrink:0"></div>
+            <div style="flex:1"><div style="color:#ff8800;font-weight:bold;font-size:12px">Tiger Uniform 🐯</div>
+            <div style="color:#aaa;font-size:10px">Cost: ${TIGER_COST.toLocaleString()} pts — Full outfit</div></div>
+            <button onclick="buyTigerUniform()" ${bankTotal>=TIGER_COST?'':'disabled'}
+              style="padding:7px 12px;border:none;border-radius:6px;cursor:${bankTotal>=TIGER_COST?'pointer':'not-allowed'};
+              font-size:11px;font-family:inherit;font-weight:bold;white-space:nowrap;
+              background:${bankTotal>=TIGER_COST?'linear-gradient(135deg,#ff8800,#cc4400)':'rgba(80,80,80,0.5)'};
+              color:${bankTotal>=TIGER_COST?'#fff':'#666'}">
+              ${bankTotal>=TIGER_COST?'Buy 🐯':'Need pts'}
+            </button>
+          </div>`
+      }
+    </div>`;
   }
 
   cosHTML+=`</div>`;
@@ -2021,6 +2082,13 @@ function buyExtraTime1(){
   updateHUD(); openBank();
 }
 
+function buyExtraTime4(){
+  if(bankTotal<20000||extraTimeBought4||!extraTimeBought3)return;
+  bankTotal-=20000; extraTimeBought4=true; sfxBuy();
+  showAlert('⏱ +20 more seconds! Level timer is now 3:20!');
+  updateHUD(); openBank();
+}
+
 function buyExtraTime3(){
   if(bankTotal<20000||extraTimeBought3||!extraTimeBought2)return;
   bankTotal-=20000; extraTimeBought3=true; sfxBuy();
@@ -2086,7 +2154,7 @@ function startLevel(){
   camX=player.gx; camY=player.gy; // snap camera immediately
   waterLevel=1;saltLevel=1;particles=[];popups=[];
   birds=[];birdTimer=7;birdFlockTimer=24;leafTimer=28;powerTimer=20;
-  saltCycleTimer=SPRINKLER_INTERVAL;levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0);
+  saltCycleTimer=SPRINKLER_INTERVAL;levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0)+(extraTimeBought4?20:0);
   // Immediately update timer display so it shows 2:00 right away
   document.getElementById('timerval').textContent='2:00';
   document.getElementById('timerval').style.color='#ff6644';
@@ -2516,7 +2584,7 @@ function fullRestart(){
   autoSystemBought=false;sprinklers=[];bigMopBought=false;extraTankBought=false;
   equippedVest='default';boughtVests=new Set(['default']);
   tigerUniformBought=false;
-  extraTimeBought1=false;extraTimeBought2=false;extraTimeBought3=false;
+  extraTimeBought1=false;extraTimeBought2=false;extraTimeBought3=false;extraTimeBought4=false;
   // Go back to splash/name screen
   const ov=document.getElementById('overlay');
   ov.innerHTML=`
@@ -4086,10 +4154,10 @@ function initGame(){
   autoSystemBought=false;sprinklers=[];bigMopBought=false;extraTankBought=false;
   equippedVest='default';boughtVests=new Set(['default']);
   tigerUniformBought=false;
-  extraTimeBought1=false;extraTimeBought2=false;extraTimeBought3=false;
+  extraTimeBought1=false;extraTimeBought2=false;extraTimeBought3=false;extraTimeBought4=false;
   stopMusic(); musicStarted=false;
   speechBubble={active:false,timer:0,text:''};
-  birds=[];birdTimer=7;birdFlockTimer=24;leafTimer=28;powerTimer=20;saltCycleTimer=SPRINKLER_INTERVAL;levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0);
+  birds=[];birdTimer=7;birdFlockTimer=24;leafTimer=28;powerTimer=20;saltCycleTimer=SPRINKLER_INTERVAL;levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0)+(extraTimeBought4?20:0);
   levelingUp=false;paused=false;
   // Reset all panel destruction state
   for(const p of panels){p.dirtCount=0;p.destroyed=false;}
