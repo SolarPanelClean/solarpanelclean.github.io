@@ -197,7 +197,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 if('serviceWorker' in navigator){
   window.addEventListener('load', function(){
     const swCode = `
-const CACHE='scg-solar-v1';
+const CACHE='scg-solar-v475';
 self.addEventListener('install',e=>{self.skipWaiting();});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))))});
 self.addEventListener('fetch',e=>{e.respondWith(caches.open(CACHE).then(c=>c.match(e.request).then(r=>r||(fetch(e.request).then(res=>{if(res.ok)c.put(e.request,res.clone());return res;}).catch(()=>r)))));});
@@ -1179,6 +1179,7 @@ function sfxWater() {
 // ── Voice alerts (Web Speech API) ─────────────────────────────
 let _voiceWaterPlayed = false;
 let _voiceSaltPlayed  = false;
+let _lastWarnState    = -1; // cache warning state to avoid DOM thrashing
 let _speechUnlocked   = false;
 let _pendingRefill    = null;
 function speakRefill(type){
@@ -2641,7 +2642,7 @@ function buyExtraTank(){
 }
 
 function startLevel(){
-  _voiceWaterPlayed=false; _voiceSaltPlayed=false;
+  _voiceWaterPlayed=false; _voiceSaltPlayed=false; _lastWarnState=-1;
   if(window.speechSynthesis) window.speechSynthesis.cancel();
   _speechUnlocked=false; _pendingRefill=null;
   // Check if player is wearing full green uniform
@@ -4644,25 +4645,34 @@ function loop(now){
   // ── Water refill (blue tank gx=-14,gy=13) — placed far from panels ──
   const tx=-14+.5,ty=13+.5;
   const tdist=Math.hypot(player.gx-tx,player.gy-ty);
-  if(tdist<2.5&&waterLevel<1){if(waterLevel===0||waterLevel<0.02) sfxWater();waterLevel=Math.min(1,waterLevel+dt*.65);updateHUD();}
+  if(tdist<2.5&&waterLevel<1){if(waterLevel===0||waterLevel<0.02) sfxWater();const _wPrev=waterLevel;waterLevel=Math.min(1,waterLevel+dt*.65);if(Math.round(_wPrev*20)!==Math.round(waterLevel*20)) updateHUD();}
   // ── Extra water tank refill (gx=9,gy=-10) ───────────────────
   const etx=9+.5,ety=-10+.5;
   const etdist=extraTankBought?Math.hypot(player.gx-etx,player.gy-ety):Infinity;
-  if(etdist<2.5&&waterLevel<1){waterLevel=Math.min(1,waterLevel+dt*.65);updateHUD();}
+  if(etdist<2.5&&waterLevel<1){const _wPrev2=waterLevel;waterLevel=Math.min(1,waterLevel+dt*.65);if(Math.round(_wPrev2*20)!==Math.round(waterLevel*20)) updateHUD();}
   // ── Salt refill (salt tank gx=-11.5,gy=13) ────────────────────
   const stx=-11.5+.5,sty=13+.5;
   const stdist=Math.hypot(player.gx-stx,player.gy-sty);
-  if(stdist<2.5&&saltLevel<1){saltLevel=Math.min(1,saltLevel+dt*.55);updateHUD();}
+  if(stdist<2.5&&saltLevel<1){const _sPrev=saltLevel;saltLevel=Math.min(1,saltLevel+dt*.55);if(Math.round(_sPrev*20)!==Math.round(saltLevel*20)) updateHUD();}
   // ── Warnings ────────────────────────────────────────────────
   const noWater=waterLevel<=0, noSalt=saltLevel<=0&&autoSystemBought&&sprinklers.length>0;
-  document.getElementById('refill').style.display=(noWater||noSalt)?'block':'none';
-  if(noWater&&noSalt) document.getElementById('refill').textContent='⚠ No water! No salt! Refill both tanks!';
-  else if(noWater)    document.getElementById('refill').textContent='⚠ No water! Go to the tank 💧!';
-  else if(noSalt)     document.getElementById('refill').textContent='⚠ No salt! Go to the salt tank 🧂!';
+  // Only update DOM when state changes (avoids 60fps DOM thrashing)
+  const _warnState = (noWater?1:0)|(noSalt?2:0);
+  if(_warnState !== _lastWarnState){
+    _lastWarnState = _warnState;
+    const _rf = document.getElementById('refill');
+    if(_rf){
+      _rf.style.display = _warnState ? 'block' : 'none';
+      if(noWater&&noSalt)  _rf.textContent='⚠ No water! No salt! Refill both tanks!';
+      else if(noWater)     _rf.textContent='⚠ No water! Go to the tank 💧!';
+      else if(noSalt)      _rf.textContent='⚠ No salt! Go to the salt tank 🧂!';
+    }
+  }
   // Voice alerts — shout once when tank first runs empty
-  if(noWater && !_voiceWaterPlayed){ _voiceWaterPlayed=true; speakRefill('water'); }
+  // Use setTimeout to defer off main thread and avoid frame lag
+  if(noWater && !_voiceWaterPlayed){ _voiceWaterPlayed=true; setTimeout(()=>speakRefill('water'),0); }
   if(!noWater) _voiceWaterPlayed=false;
-  if(noSalt  && !_voiceSaltPlayed) { _voiceSaltPlayed=true;  speakRefill('salt');  }
+  if(noSalt   && !_voiceSaltPlayed){ _voiceSaltPlayed=true;  setTimeout(()=>speakRefill('salt'),0); }
   if(!noSalt)  _voiceSaltPlayed=false;
 
   // ── Speech bubble timer ────────────────────────────────────
