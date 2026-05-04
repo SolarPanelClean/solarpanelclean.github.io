@@ -1,4 +1,4 @@
-const CACHE = 'scg-solar-v476';
+const CACHE = 'scg-solar-v477';
 const ASSETS = ['/'];
 
 self.addEventListener('install', e => {
