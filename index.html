@@ -1818,7 +1818,7 @@ function buildBonusPanels(){
 }
 
 function checkSecretBonus(){
-  // Requires: all 4 green items bought AND played at least one level in full green
+  // Requires: all 4 green items bought AND played a level wearing full green outfit
   const hasGreenHat  = boughtHats.has('green');
   const hasGreenVest = boughtVests.has('green');
   const hasGreenShirt= boughtShirts.has('green');
@@ -2011,7 +2011,7 @@ async function doLevelUp(){
 
 
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
-      ${prevLevel===6&&checkSecretBonus()?`<button class="btn" style="background:linear-gradient(135deg,#00ff88,#00aa44);color:#000;font-weight:bold;animation:secretPulse 0.8s infinite" onclick="startBonusStage()">🤫 SECRET STAGE!</button>`:`<button class="btn btn-green" onclick="startLevel()">▶ Play Level ${currentLevel}</button>`}
+      ${prevLevel>=5&&checkSecretBonus()?`<button class="btn" style="background:linear-gradient(135deg,#00ff88,#00aa44);color:#000;font-weight:bold;animation:secretPulse 0.8s infinite" onclick="startBonusStage()">🤫 SECRET STAGE!</button>`:`<button class="btn btn-green" onclick="startLevel()">▶ Play Level ${currentLevel}</button>`}
       ${bankTotal>0?`<button class="btn" style="background:linear-gradient(135deg,#ffd700,#cc8800);color:#000" onclick="openBank()">🏦 Bank (${bankTotal.toLocaleString()} pts')</button>`:''}\n    </div>`;
   ov.style.display='flex';
   updateHUD();
@@ -4586,15 +4586,15 @@ function loop(now){
   // ── Water refill (blue tank gx=-14,gy=13) — placed far from panels ──
   const tx=-14+.5,ty=13+.5;
   const tdist=Math.hypot(player.gx-tx,player.gy-ty);
-  if(tdist<2.5&&waterLevel<1){if(waterLevel===0||waterLevel<0.02) sfxWater();waterLevel=Math.min(1,waterLevel+dt*.65);updateHUD();}
+  if(tdist<2.5&&waterLevel<1){if(waterLevel===0||waterLevel<0.02) sfxWater();const _wp=waterLevel;waterLevel=Math.min(1,waterLevel+dt*.65);if(Math.floor(_wp*20)!==Math.floor(waterLevel*20))updateHUD();}
   // ── Extra water tank refill (gx=9,gy=-10) ───────────────────
   const etx=9+.5,ety=-10+.5;
   const etdist=extraTankBought?Math.hypot(player.gx-etx,player.gy-ety):Infinity;
-  if(etdist<2.5&&waterLevel<1){waterLevel=Math.min(1,waterLevel+dt*.65);updateHUD();}
+  if(etdist<2.5&&waterLevel<1){const _ep=waterLevel;waterLevel=Math.min(1,waterLevel+dt*.65);if(Math.floor(_ep*20)!==Math.floor(waterLevel*20))updateHUD();}
   // ── Salt refill (salt tank gx=-11.5,gy=13) ────────────────────
   const stx=-11.5+.5,sty=13+.5;
   const stdist=Math.hypot(player.gx-stx,player.gy-sty);
-  if(stdist<2.5&&saltLevel<1){saltLevel=Math.min(1,saltLevel+dt*.55);updateHUD();}
+  if(stdist<2.5&&saltLevel<1){const _sp=saltLevel;saltLevel=Math.min(1,saltLevel+dt*.55);if(Math.floor(_sp*20)!==Math.floor(saltLevel*20))updateHUD();}
   // ── Warnings ────────────────────────────────────────────────
   const noWater=waterLevel<=0, noSalt=saltLevel<=0&&autoSystemBought&&sprinklers.length>0;
   // Only update DOM when state changes - prevents 60fps DOM thrashing
