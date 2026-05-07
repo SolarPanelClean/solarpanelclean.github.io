@@ -1809,7 +1809,8 @@ const HEART_GRID=[
 const HEART_SPACING=3;
 let _bonusActive=false, _bonusAllClean=false;
 let _secretBonusUnlocked=false;
-let _playedFullGreen=false; // true if user played a level in all-green uniform
+let _playedFullGreen=false;
+let _showSecretOnReturn=false; // persist secret stage button when returning from Bank // true if user played a level in all-green uniform
 
 function buildBonusPanels(){
   panels=[];
@@ -1847,6 +1848,7 @@ function checkSecretBonus(){
 
 
 function startBonusStage(){
+  _showSecretOnReturn=false;
   _bonusActive=true; _bonusAllClean=false;
   buildBonusPanels();
   // Start player at left-center of heart, outside panels
@@ -2027,7 +2029,7 @@ async function doLevelUp(){
 
 
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
-      ${prevLevel>=5&&checkSecretBonus()?`<button class="btn" style="background:linear-gradient(135deg,#00ff88,#00aa44);color:#000;font-weight:bold;animation:secretPulse 0.8s infinite" onclick="startBonusStage()">🤫 SECRET STAGE!</button>`:`<button class="btn btn-green" onclick="startLevel()">▶ Play Level ${currentLevel}</button>`}
+      ${prevLevel>=5&&checkSecretBonus()?(_showSecretOnReturn=true,`<button class="btn" style="background:linear-gradient(135deg,#00ff88,#00aa44);color:#000;font-weight:bold;animation:secretPulse 0.8s infinite" onclick="startBonusStage()">🤫 SECRET STAGE!</button>`):(_showSecretOnReturn=false,`<button class="btn btn-green" onclick="startLevel()">▶ Play Level ${currentLevel}</button>`)}
       ${bankTotal>0?`<button class="btn" style="background:linear-gradient(135deg,#ffd700,#cc8800);color:#000" onclick="openBank()">🏦 Bank (${bankTotal.toLocaleString()} pts')</button>`:''}\n    </div>`;
   ov.style.display='flex';
   updateHUD();
@@ -2560,7 +2562,7 @@ function closeBank(){
   if(levelingUp){
     // Rebuild the level-up overlay — same logic as doLevelUp including secret stage
     const nextTarget=levelTarget(currentLevel);
-    const showSecret = prevLevel>=5 && checkSecretBonus();
+    const showSecret = _showSecretOnReturn || (prevLevel>=5 && checkSecretBonus());
     ov.innerHTML=`
       <h1>🌟 Level <span>${currentLevel}</span>!</h1>
       <p>Score banked: <b>${bankTotal.toLocaleString()} pts</b><br>
@@ -2597,6 +2599,7 @@ function buyExtraTank(){
 }
 
 function startLevel(){
+  _showSecretOnReturn=false;
   _voiceWaterPlayed=false; _voiceSaltPlayed=false; _lastWarnState=-1;
   if(window.speechSynthesis) window.speechSynthesis.cancel();
   // Check if player is wearing full green uniform
