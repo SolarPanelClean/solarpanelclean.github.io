@@ -2126,7 +2126,7 @@ async function doLevelUp(){
     </div>` : '';
   // Compute secret stage visibility BEFORE template string
   _showSecretOnReturn = (prevLevel>=6 && checkSecretBonus() && !_bonusStageUsed);
-  if(_showSecretOnReturn) _bonusStageUsed=true; // lock it immediately so it can't show again
+  // NOTE: _bonusStageUsed is only set to true when player actually CLICKS the secret button
   ov.innerHTML=`
     <h1 style="font-size:36px;letter-spacing:4px;text-transform:uppercase;
       background:linear-gradient(135deg,#ffe066,#ffaa00,#fff7aa,#ffaa00,#ffe066);
