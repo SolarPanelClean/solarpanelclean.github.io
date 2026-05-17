@@ -5022,11 +5022,6 @@ self.addEventListener('fetch', e => {
 })();
 
 requestAnimationFrame(loop);
-// Init on page load — restore saved player name
-try{
-  const _pn=localStorage.getItem('solarCleanPlayerName');
-  if(_pn){const _pi=document.getElementById('playerName');if(_pi)_pi.value=_pn;}
-}catch(e){}
 checkWeeklyReset();
 updateDailyGoalWidget();
 // iOS passive touch fix
@@ -5034,7 +5029,7 @@ document.addEventListener('touchstart', function(){}, {passive:true});
 </script>
 
 <!-- Tutorial Overlay -->
-<div <div id="tutorialOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(3,7,20,0.97);z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+<div id="tutorialOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(3,7,20,0.97);z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
   <div style="max-width:480px;width:90%;margin:0 auto;padding:20px 0 30px;font-family:Arial,sans-serif;">
     <h2 style="color:#44ddff;font-size:20px;letter-spacing:2px;text-align:center;margin-bottom:16px;">📖 How to Play</h2>
     <div style="margin-bottom:10px;background:rgba(6,14,32,0.8);border-radius:10px;padding:12px 16px;">
@@ -5060,7 +5055,6 @@ document.addEventListener('touchstart', function(){}, {passive:true});
     <button onclick="closeTutorial()" style="display:block;margin:0 auto;padding:12px 40px;font-size:14px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#1a3a6a,#2255aa);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#fff;cursor:pointer;font-family:inherit;">🏠 Home</button>
   </div>
 </div>
-</div>
 
 <!-- Content for search engines and AdSense compliance -->
 <div id="siteContent" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
@@ -5075,15 +5069,6 @@ document.addEventListener('touchstart', function(){}, {passive:true});
     <p>May display ads via Google AdSense. See <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.</p>
   </article>
 </div>
-
-<script>
-// Load saved player name into input on page ready
-document.addEventListener('DOMContentLoaded', function(){
-  var saved = ''; try{ saved = localStorage.getItem('solarCleanPlayerName')||''; }catch(e){}
-  var inp = document.getElementById('playerName');
-  if(inp && saved) inp.value = saved;
-});
-</script>
 
 <script>
 // Event delegation for dynamically-created tutorial button
