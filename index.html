@@ -5056,19 +5056,31 @@ document.addEventListener('touchstart', function(){}, {passive:true});
   </div>
 </div>
 
-<!-- Content for search engines and AdSense compliance -->
-<div id="siteContent" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
-  <article>
-    <h1>Solar Clean - Solar Panel Cleaning Game</h1>
-    <p>Solar Clean is a free fun mobile game where you clean solar panels. Features 10 levels, upgrades, global leaderboard and more.</p>
-    <h2>How to Play</h2>
-    <p>Use the virtual joystick to move your character. Press Clean to remove dust, bird droppings and leaves. Earn points and level up.</p>
-    <h2>About</h2>
-    <p>Solar Clean was developed by Yaniv Waldman. Promotes solar panel maintenance awareness for optimal energy production.</p>
-    <h2>Privacy Policy</h2>
-    <p>May display ads via Google AdSense. See <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.</p>
+<!-- Visible content section required for AdSense compliance -->
+<div id="siteContent" style="position:fixed;bottom:0;left:0;right:0;z-index:5;background:rgba(6,14,32,0.95);border-top:1px solid rgba(70,170,255,0.2);padding:8px 16px;display:none;" id="pageFooter">
+  <article style="max-width:700px;margin:0 auto;font-family:Arial,sans-serif;font-size:11px;color:#88aacc;line-height:1.5;display:flex;gap:24px;flex-wrap:wrap;">
+    <div>
+      <h1 style="font-size:12px;color:#44ddff;margin:0 0 2px;font-weight:bold;">Solar Clean – Solar Panel Cleaning Game</h1>
+      <p style="margin:0;">A free mobile game by Yaniv Waldman. Clean solar panels, earn points, and reach Level 10!</p>
+    </div>
+    <div>
+      <h2 style="font-size:11px;color:#44ddff;margin:0 0 2px;font-weight:bold;">How to Play</h2>
+      <p style="margin:0;">Use the joystick to move. Press Clean next to a dirty panel. Refill your water tank to keep going.</p>
+    </div>
+    <div>
+      <h2 style="font-size:11px;color:#44ddff;margin:0 0 2px;font-weight:bold;">About & Privacy</h2>
+      <p style="margin:0;">Ads served by Google AdSense. See <a href="https://policies.google.com/privacy" style="color:#44ddff;">Google Privacy Policy</a>.</p>
+    </div>
   </article>
 </div>
+
+<script>
+// Show the footer after game loads so it's visible to crawlers and users
+window.addEventListener('load', function() {
+  var footer = document.getElementById('pageFooter');
+  if (footer) footer.style.display = 'block';
+});
+</script>
 
 <script>
 // Event delegation for dynamically-created tutorial button
