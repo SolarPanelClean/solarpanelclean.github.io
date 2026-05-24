@@ -135,7 +135,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
   cursor:pointer; -webkit-tap-highlight-color:transparent; -webkit-appearance:none;
   user-select:none; pointer-events:all; touch-action:manipulation; }
 .mob-btn:active { transform:scale(0.86); opacity:0.8; }
-#btn-clean { width:70px; height:70px; font-size:26px; background:radial-gradient(circle at 35% 35%,#66ffaa,#11aa44); color:#003311; border:2px solid rgba(100,255,150,0.6); }
+#btn-clean { width:min(72px, 16.25vw); height:min(72px, 16.25vw); font-size:min(25px, 5.6vw); background:radial-gradient(circle at 35% 35%,#66ffaa,#11aa44); color:#003311; border:2px solid rgba(100,255,150,0.6); }
 #btn-pause { width:46px; height:46px; font-size:14px; background:rgba(6,14,32,0.93); color:#88ccff; border:1px solid rgba(70,170,255,0.4); border-radius:50%; }
 #btn-bank  { width:46px; height:46px; font-size:14px; background:rgba(40,30,5,0.95); color:#ffd700; border:1px solid rgba(255,215,0,0.5); border-radius:50%; }
 #btn-music { width:46px; height:46px; font-size:14px; background:rgba(6,14,32,0.93); color:#cc88ff; border:1px solid rgba(180,100,255,0.4); border-radius:50%; }
@@ -154,6 +154,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
   #joystick-zone { width:100px !important; height:100px !important; bottom:50px !important; left:10px !important; }
   #mobile-btns   { bottom:50px !important; right:10px !important; gap:6px !important; }
   .mob-btn       { width:46px !important; height:46px !important; font-size:16px !important; }
+  #btn-clean     { width:58px !important; height:58px !important; font-size:20px !important; }
   #exitBtn       { bottom:8px !important; right:8px !important; }
   #refill        { bottom:155px !important; }
   #ui            { padding:3px 6px !important; }
@@ -163,6 +164,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
   #joystick-zone { width:115px !important; height:115px !important; bottom:58px !important; }
   #mobile-btns   { bottom:58px !important; gap:8px !important; }
   .mob-btn       { width:52px !important; height:52px !important; }
+  #btn-clean     { width:65px !important; height:65px !important; font-size:23px !important; }
 }
 
 /* ── Retro Bank Styles ── */
@@ -305,7 +307,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
       </div>
       <div style="font-size:9px;color:#dddddd;
         text-shadow:0 0 6px rgba(0,0,0,1),1px 1px 2px rgba(0,0,0,1);">
-        Version 4.7.7
+        Version 4.7.8
       </div>
     </div>
   </div>
@@ -374,8 +376,8 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
     <div style="font-size:16px;font-weight:bold;color:#fff;" id="timerval-mobile">2:00</div>
   </div>
 
-  <!-- Water top-right -->
-  <div style="position:fixed;top:10px;right:10px;background:rgba(6,14,32,0.88);
+  <!-- Water — next to timer -->
+  <div style="position:fixed;top:10px;left:230px;background:rgba(6,14,32,0.88);
     border:1px solid rgba(70,170,255,0.35);border-radius:10px;padding:6px 10px;text-align:center;">
     <div style="font-size:8px;letter-spacing:2px;color:#5ab4ff;text-transform:uppercase;">💧 Water</div>
     <div id="wbar" style="width:70px;height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
@@ -399,8 +401,8 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
   <div id="levelprog" style="display:none"></div>
 </div>
 
-<!-- Salt bar — shown below water bar after Auto-Clean System purchased -->
-<div id="saltbox" style="display:none;position:fixed;top:10px;right:106px;background:rgba(6,14,32,0.88);
+<!-- Salt bar — shown right of water bar after Auto-Clean System purchased -->
+<div id="saltbox" style="display:none;position:fixed;top:10px;left:320px;background:rgba(6,14,32,0.88);
   border:1px solid rgba(200,220,255,0.35);border-radius:10px;padding:6px 10px;text-align:center;z-index:10;">
   <div style="font-size:8px;letter-spacing:2px;color:#aabbdd;text-transform:uppercase;">🧂 Salt</div>
   <div id="sbar" style="width:70px;height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
