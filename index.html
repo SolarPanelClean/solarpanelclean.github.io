@@ -42,9 +42,9 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 }
 
 /* ── HUD ── */
-#ui { position:fixed; top:0; left:0; right:0; padding:6px 8px;
-  display:flex; justify-content:space-between; align-items:flex-start;
-  pointer-events:none; z-index:10; gap:4px; flex-wrap:wrap; }
+#ui { position:fixed; top:10px; left:10px;
+  display:flex; justify-content:flex-start; align-items:flex-start;
+  pointer-events:none; z-index:10; gap:8px; flex-wrap:nowrap; }
 .box { background:rgba(6,14,32,0.93); border:1px solid rgba(70,170,255,0.3);
   border-radius:8px; padding:5px 8px; backdrop-filter:blur(8px); min-width:60px; }
 .lbl { font-size:8px; letter-spacing:1.5px; color:#5ab4ff; text-transform:uppercase; margin-bottom:1px; }
@@ -358,32 +358,37 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 
 <canvas id="c"></canvas>
 
-<!-- HUD — MOBILE: score top-left, water top-right, exit bottom-right -->
-<div id="ui" style="pointer-events:none;z-index:10;">
+<div id="ui">
 
-  <!-- Score top-left -->
-  <div style="position:fixed;top:10px;left:10px;background:rgba(6,14,32,0.88);
-    border:1px solid rgba(70,170,255,0.35);border-radius:10px;padding:6px 12px;min-width:100px;">
+  <!-- Score -->
+  <div style="background:rgba(6,14,32,0.88);border:1px solid rgba(70,170,255,0.35);border-radius:10px;padding:6px 12px;min-width:100px;flex-shrink:0;">
     <div style="font-size:8px;letter-spacing:2px;color:#5ab4ff;text-transform:uppercase;">Score</div>
     <div style="font-size:18px;font-weight:bold;color:#fff;" id="score">0</div>
     <div style="font-size:9px;color:#99bbcc;margin-top:2px;" id="levelsub">Lv1 · 0/25,000</div>
   </div>
 
-  <!-- Timer — compact box right next to score -->
-  <div id="timerbox-mobile" style="position:fixed;top:10px;left:165px;background:rgba(6,14,32,0.88);
-    border:1px solid rgba(255,80,50,0.45);border-radius:10px;padding:6px 10px;text-align:center;min-width:52px;">
+  <!-- Timer -->
+  <div id="timerbox-mobile" style="background:rgba(6,14,32,0.88);border:1px solid rgba(255,80,50,0.45);border-radius:10px;padding:6px 10px;text-align:center;min-width:52px;flex-shrink:0;">
     <div style="font-size:8px;letter-spacing:2px;color:#ff7755;text-transform:uppercase;">⏱</div>
     <div style="font-size:16px;font-weight:bold;color:#fff;" id="timerval-mobile">2:00</div>
   </div>
 
-  <!-- Water — next to timer -->
-  <div style="position:fixed;top:10px;left:230px;background:rgba(6,14,32,0.88);
-    border:1px solid rgba(70,170,255,0.35);border-radius:10px;padding:6px 10px;text-align:center;">
+  <!-- Water -->
+  <div style="background:rgba(6,14,32,0.88);border:1px solid rgba(70,170,255,0.35);border-radius:10px;padding:6px 10px;text-align:center;flex-shrink:0;">
     <div style="font-size:8px;letter-spacing:2px;color:#5ab4ff;text-transform:uppercase;">💧 Water</div>
     <div id="wbar" style="width:70px;height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
       <div id="wfill" style="height:100%;width:100%;background:linear-gradient(90deg,#2299ff,#44ddff);border-radius:3px;transition:width .12s;"></div>
     </div>
     <div style="font-size:9px;color:#44ddff;" id="wpct">100%</div>
+  </div>
+
+  <!-- Salt — same 8px gap, shown when Auto-Clean purchased -->
+  <div id="saltbox" style="display:none;background:rgba(6,14,32,0.88);border:1px solid rgba(200,220,255,0.35);border-radius:10px;padding:6px 10px;text-align:center;flex-shrink:0;z-index:10;">
+    <div style="font-size:8px;letter-spacing:2px;color:#aabbdd;text-transform:uppercase;">🧂 Salt</div>
+    <div id="sbar" style="width:70px;height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
+      <div id="sfill" style="height:100%;width:100%;background:linear-gradient(90deg,#aaccff,#ddeeff);border-radius:3px;transition:width .12s;"></div>
+    </div>
+    <div style="font-size:9px;color:#ccddf0;" id="spct">100%</div>
   </div>
 
   <!-- Hidden elements kept for JS compatibility -->
@@ -401,15 +406,6 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
   <div id="levelprog" style="display:none"></div>
 </div>
 
-<!-- Salt bar — shown right of water bar after Auto-Clean System purchased -->
-<div id="saltbox" style="display:none;position:fixed;top:10px;left:320px;background:rgba(6,14,32,0.88);
-  border:1px solid rgba(200,220,255,0.35);border-radius:10px;padding:6px 10px;text-align:center;z-index:10;">
-  <div style="font-size:8px;letter-spacing:2px;color:#aabbdd;text-transform:uppercase;">🧂 Salt</div>
-  <div id="sbar" style="width:70px;height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
-    <div id="sfill" style="height:100%;width:100%;background:linear-gradient(90deg,#aaccff,#ddeeff);border-radius:3px;transition:width .12s;"></div>
-  </div>
-  <div style="font-size:9px;color:#ccddf0;" id="spct">100%</div>
-</div>
 <div id="extraTankBox" style="display:none!important">
   <div id="etbar" style="display:none"><div id="etfill"></div></div>
   <div id="etpct" style="display:none"></div>
