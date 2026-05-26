@@ -791,10 +791,10 @@ function startGame(){
   // Show level 1 speech bubble
   const msg=LEVEL_MESSAGES[1];
   if(msg){speechBubble={active:true,timer:SPEECH_DURATION,text:msg};}
-  gameRunning=true;lastT=performance.now();
+  gameRunning=true;lastT=0; // reset to 0 so fps cap lets the very next frame through
   showMobileControls(true);
   if(musicEnabled) startMusic();
-requestAnimationFrame(loop);
+  // loop is already running from startup — no need to start a second one
 }
 function selectStage(s){
   selectedStage=s;
@@ -824,8 +824,11 @@ function selectStage(s){
 const cv=document.getElementById('c');
 const ctx=cv.getContext('2d');
 let W,H;
+// Sky gradient cache — declared here so resize() can invalidate it
+let _skyGradCache = null, _skyGradW = 0, _skyGradH = 0;
 function resize(){
-  const dpr = window.devicePixelRatio || 1;
+  // Cap DPR at 2 — phones at DPR 3 render 9× the pixels for minimal visual gain
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   W = window.innerWidth;
   H = window.innerHeight;
   cv.width  = Math.round(W * dpr);
@@ -833,11 +836,18 @@ function resize(){
   cv.style.width  = W + 'px';
   cv.style.height = H + 'px';
   ctx.scale(dpr, dpr);
+  _skyGradCache = null; // force gradient rebuild at new size
 }
 resize();
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', ()=>{ setTimeout(resize, 200); });
-document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) resize(); });
+document.addEventListener('visibilitychange', ()=>{
+  if(!document.hidden){
+    // Reset lastT so dt doesn't spike after a long background pause
+    lastT = performance.now();
+    resize();
+  }
+});
 
 // ── Iso projection ────────────────────────────────────────────
 const TW=38,TH=19;   // Mobile: zoomed out so all panels + water tank visible
@@ -4470,24 +4480,36 @@ function drawOneBird(bird){
 
 // ── Sky ───────────────────────────────────────────────────────
 const STARS=Array.from({length:90},()=>[Math.random(),Math.random(),.6+Math.random()*1.4]);
+// Pre-generate rooftop windows (static, not re-randomized every frame)
+const ROOFTOP_WINDOWS=Array.from({length:60},()=>[Math.random(),Math.random(),0.3+Math.random()*0.5]);
+function getSkyGrads(){
+  if(_skyGradW===W && _skyGradH===H && _skyGradCache) return _skyGradCache;
+  _skyGradW=W; _skyGradH=H;
+  const sx=W*.84,sy=H*.1;
+  const sg2=ctx.createRadialGradient(sx,sy,4,sx,sy,130);
+  sg2.addColorStop(0,'rgba(255,248,180,1)');sg2.addColorStop(.2,'rgba(255,215,80,.5)');sg2.addColorStop(1,'rgba(255,200,40,0)');
+  const hgRooftop=ctx.createLinearGradient(0,H*.32,0,H*.54);
+  hgRooftop.addColorStop(0,'rgba(40,80,140,0)');hgRooftop.addColorStop(1,'rgba(20,50,90,.5)');
+  const skyGRooftop=ctx.createLinearGradient(0,0,0,H*.55);
+  skyGRooftop.addColorStop(0,'#1a2a3a');skyGRooftop.addColorStop(1,'#2a3a50');
+  const hgGrass=ctx.createLinearGradient(0,H*.32,0,H*.54);
+  hgGrass.addColorStop(0,'rgba(20,60,120,0)');hgGrass.addColorStop(1,'rgba(10,30,60,.4)');
+  _skyGradCache={sg2,hgRooftop,skyGRooftop,hgGrass};
+  return _skyGradCache;
+}
 function drawSky(){
   ctx.globalAlpha=1; ctx.globalCompositeOperation='source-over';
+  const {sg2,hgRooftop,skyGRooftop,hgGrass}=getSkyGrads();
   if(selectedStage==='rooftop'){
     // Urban hazy sky — lighter blue/grey
-    const skyG=ctx.createLinearGradient(0,0,0,H*.55);
-    skyG.addColorStop(0,'#1a2a3a');
-    skyG.addColorStop(1,'#2a3a50');
-    ctx.fillStyle=skyG;ctx.fillRect(0,0,W,H);
-    // Sun (same position)
+    ctx.fillStyle=skyGRooftop;ctx.fillRect(0,0,W,H);
+    // Sun
     const sx=W*.84,sy=H*.1;
-    const sg2=ctx.createRadialGradient(sx,sy,4,sx,sy,130);
-    sg2.addColorStop(0,'rgba(255,248,180,1)');sg2.addColorStop(.2,'rgba(255,215,80,.5)');sg2.addColorStop(1,'rgba(255,200,40,0)');
     ctx.fillStyle=sg2;ctx.beginPath();ctx.arc(sx,sy,130,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#fffae0';ctx.beginPath();ctx.arc(sx,sy,20,0,Math.PI*2);ctx.fill();
     // City skyline silhouette at horizon
     const horizon=H*.44;
     ctx.fillStyle='#111820';
-    // Buildings: [x_fraction, width, height]
     const buildings=[
       [.00,.045,.13],[.04,.035,.09],[.08,.05,.17],[.12,.04,.11],
       [.15,.06,.20],[.20,.035,.12],[.23,.05,.16],[.27,.04,.08],
@@ -4501,32 +4523,24 @@ function drawSky(){
       const bpx=bx*W, bpw=bw*W, bph=bh*H*.5;
       ctx.fillRect(bpx, horizon-bph, bpw, bph+H*.1);
     }
-    // Windows glowing in buildings
+    // Windows — pre-generated, not re-randomized every frame
     ctx.fillStyle='rgba(255,240,150,0.6)';
-    for(let i=0;i<60;i++){
-      const wx=Math.random()*W;
-      const wy=horizon-Math.random()*H*.22;
-      ctx.globalAlpha=0.3+Math.random()*0.5;
-      ctx.fillRect(wx,wy,2,3);
+    for(const[wx,wy,wa]of ROOFTOP_WINDOWS){
+      ctx.globalAlpha=wa;
+      ctx.fillRect(wx*W, horizon-wy*H*.22, 2, 3);
     }
     ctx.globalAlpha=1;
     // Haze at horizon
-    const hg=ctx.createLinearGradient(0,H*.32,0,H*.54);
-    hg.addColorStop(0,'rgba(40,80,140,0)');hg.addColorStop(1,'rgba(20,50,90,.5)');
-    ctx.fillStyle=hg;ctx.fillRect(0,H*.32,W,H*.22);
+    ctx.fillStyle=hgRooftop;ctx.fillRect(0,H*.32,W,H*.22);
   } else {
     // Grass stage — original sky
     ctx.fillStyle=C.sky;ctx.fillRect(0,0,W,H);
     const sx=W*.84,sy=H*.1;
-    const sg2=ctx.createRadialGradient(sx,sy,4,sx,sy,130);
-    sg2.addColorStop(0,'rgba(255,248,180,1)');sg2.addColorStop(.2,'rgba(255,215,80,.5)');sg2.addColorStop(1,'rgba(255,200,40,0)');
     ctx.fillStyle=sg2;ctx.beginPath();ctx.arc(sx,sy,130,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#fffae0';ctx.beginPath();ctx.arc(sx,sy,20,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='rgba(255,255,255,.55)';
     for(const s of STARS)ctx.fillRect(s[0]*W,s[1]*H*.4,s[2],s[2]);
-    const hg=ctx.createLinearGradient(0,H*.32,0,H*.54);
-    hg.addColorStop(0,'rgba(20,60,120,0)');hg.addColorStop(1,'rgba(10,30,60,.4)');
-    ctx.fillStyle=hg;ctx.fillRect(0,H*.32,W,H*.22);
+    ctx.fillStyle=hgGrass;ctx.fillRect(0,H*.32,W,H*.22);
   }
 }
 
@@ -4567,7 +4581,6 @@ function drawParticles(){
   for(const p of popups){
     ctx.save();ctx.globalAlpha=Math.min(1,p.life);
     ctx.font='bold 15px Courier New';ctx.fillStyle=p.col;ctx.textAlign='center';
-    ctx.shadowColor=p.col;ctx.shadowBlur=8;
     ctx.fillText(p.txt,p.x,p.y);ctx.restore();
   }
 }
@@ -4657,14 +4670,20 @@ function renderScene(){
 // ═══════════════════════════════════════════════════════════════
 let lastT=0;
 const SPEED=5.0;
+const TARGET_FPS = 60;
+const FRAME_MIN_MS = 1000 / TARGET_FPS;
 
 function loop(now){
   requestAnimationFrame(loop);
+  // Don't burn CPU/GPU when tab is in background
+  if(document.hidden) return;
+  // Skip frames to cap at 60fps (prevents 120fps drain on ProMotion displays)
+  if(now - lastT < FRAME_MIN_MS - 1) return;
   const dt=Math.min((now-lastT)/1000,.05);
   lastT=now;
   if(typeof updatePanelIntro==="function") updatePanelIntro(dt);
   if(!gameRunning){drawSky();return;}
-  if(paused){drawSky();drawGround();renderScene();drawBirds();drawParticles();return;}
+  if(paused) return; // scene is already drawn; don't repaint every frame while paused
 
   // ── Level countdown ────────────────────────────────────────
   levelTimeLeft-=dt;
