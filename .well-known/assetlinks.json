@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.ninja_niv.scg.twa",
+        "sha256_cert_fingerprints": ["C6:8A:53:F8:9B:69:32:D8:90:63:DF:7D:00:80:DE:51:06:D6:63:29:63:9A:5A:4E:69:9E:AB:36:33:E7:E4:69"]
+      }
+    }]
