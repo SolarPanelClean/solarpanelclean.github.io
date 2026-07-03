@@ -17,8 +17,8 @@
 <meta property="og:title" content="Solar Clean - Solar Panel Cleaning Game">
 <meta property="og:description" content="Clean solar panels, earn points and level up! Free mobile game for all ages.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://scg.ninja-niv.com/">
-<meta property="og:image" content="https://scg.ninja-niv.com/icon.png">
+<meta property="og:url" content="https://game.solarcleangame.com/">
+<meta property="og:image" content="https://game.solarcleangame.com/icon.png">
 <title>SolarCleanGame 🌞</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -303,11 +303,11 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
       </div>
       <div style="font-size:9px;color:#dddddd;margin-bottom:1px;
         text-shadow:0 0 6px rgba(0,0,0,1),1px 1px 2px rgba(0,0,0,1);">
-        © 2026 ninja-niv. All rights reserved.
+        © 2026 SolarCleanGame. All rights reserved.
       </div>
       <div style="font-size:9px;color:#dddddd;
         text-shadow:0 0 6px rgba(0,0,0,1),1px 1px 2px rgba(0,0,0,1);">
-        Version 4.8.1
+        Version 4.8.2
       </div>
     </div>
   </div>
@@ -5535,7 +5535,7 @@ document.addEventListener('touchstart', function(){}, {passive:true});
 
     <div id="shareCopiedMsg" style="display:none;text-align:center;color:#44ddff;font-size:12px;margin:-2px 0 10px;letter-spacing:1px;">Link copied!</div>
 
-    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.8.1</span></div>
+    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.8.2</span></div>
 
     <button onclick="closeSettings()" style="display:block;margin:0 auto;padding:12px 40px;font-size:14px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#1a3a6a,#2255aa);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#fff;cursor:pointer;font-family:inherit;">🏠 Home</button>
   </div>
@@ -5582,7 +5582,30 @@ document.addEventListener('touchend', function(ev){
 </script>
 
 <script>
-if('serviceWorker' in navigator && location.hostname === 'scg.ninja-niv.com'){
+// ── Soft keyboard workaround ────────────────────────────────────
+// Some Android WebView wrappers (e.g. Kodular's WebViewer) don't reliably
+// resize/pan the page when the on-screen keyboard opens, so a focused
+// input can end up hidden behind the keyboard. Manually scroll it into
+// view whenever it gets focus, and again if the keyboard resizes the
+// visible viewport after the fact.
+document.addEventListener('focusin', function(ev){
+  var t = ev.target;
+  if(t && (t.tagName==='INPUT' || t.tagName==='TEXTAREA')){
+    setTimeout(function(){ t.scrollIntoView({block:'center', behavior:'smooth'}); }, 300);
+  }
+});
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', function(){
+    var a = document.activeElement;
+    if(a && (a.tagName==='INPUT' || a.tagName==='TEXTAREA')){
+      setTimeout(function(){ a.scrollIntoView({block:'center', behavior:'smooth'}); }, 50);
+    }
+  });
+}
+</script>
+
+<script>
+if('serviceWorker' in navigator && location.hostname === 'game.solarcleangame.com'){
   window.addEventListener('load', function(){
     navigator.serviceWorker.register('/sw.js')
       .catch(function(e){ console.log('SW:', e); });
