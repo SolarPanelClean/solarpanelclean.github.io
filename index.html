@@ -85,7 +85,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 .key b { color:#fff; }
 
 /* ── Exit button ── */
-#exitBtn { position:fixed; bottom:calc(max(10px, 1.5vh) + env(safe-area-inset-bottom, 0px)); right:max(10px, 2vw); z-index:30;
+#exitBtn { position:fixed; bottom:calc(max(10px, 1.5vh) + env(safe-area-inset-bottom, 0px)); right:calc(max(10px, 2vw) + env(safe-area-inset-right, 0px)); z-index:30;
   background:rgba(40,8,8,0.95); border:1px solid rgba(255,80,60,0.45);
   border-radius:10px; padding:10px 18px; font-size:13px; color:#ff7766;
   cursor:pointer; font-family:inherit; letter-spacing:1px;
@@ -122,20 +122,20 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 .btn-green { background:linear-gradient(135deg,#44ff88,#11aa44); color:#000; }
 
 /* ── Mobile joystick ── */
-#joystick-zone { position:fixed; bottom:max(65px, 12vh); left:max(12px, 2vw); width:min(130px, 28vw); height:min(130px, 28vw); z-index:30; pointer-events:all; display:none; }
+#joystick-zone { position:fixed; bottom:calc(max(65px, 12vh) + env(safe-area-inset-bottom, 0px)); left:calc(max(12px, 2vw) + env(safe-area-inset-left, 0px)); width:min(130px, 28vw); height:min(130px, 28vw); z-index:30; pointer-events:all; display:none; }
 #joystick-base { position:absolute; inset:0; border-radius:50%; background:rgba(68,170,255,0.12); border:2px solid rgba(68,170,255,0.35); }
 #joystick-stick { position:absolute; width:46px; height:46px; border-radius:50%;
   background:radial-gradient(circle at 35% 35%, rgba(120,210,255,0.9), rgba(20,100,200,0.85));
   border:2px solid rgba(100,200,255,0.7); top:50%; left:50%; transform:translate(-50%,-50%); transition:none; }
 
 /* ── Mobile action buttons ── */
-#mobile-btns { position:fixed; bottom:max(65px, 12vh); right:max(10px, 2vw); display:none; flex-direction:column; gap:min(10px, 1.5vh); z-index:30; pointer-events:all; }
+#mobile-btns { position:fixed; bottom:calc(max(65px, 12vh) + env(safe-area-inset-bottom, 0px)); right:calc(max(16px, 2.8vw) + env(safe-area-inset-right, 0px)); display:none; flex-direction:column; gap:min(10px, 1.5vh); z-index:30; pointer-events:all; }
 .mob-btn { width:min(58px, 13vw); height:min(58px, 13vw); border-radius:50%; border:none; font-size:min(20px, 4.5vw); font-weight:bold;
   display:flex; align-items:center; justify-content:center;
   cursor:pointer; -webkit-tap-highlight-color:transparent; -webkit-appearance:none;
   user-select:none; pointer-events:all; touch-action:manipulation; }
 .mob-btn:active { transform:scale(0.86); opacity:0.8; }
-#btn-clean { width:min(72px, 16.25vw); height:min(72px, 16.25vw); font-size:min(25px, 5.6vw); background:radial-gradient(circle at 35% 35%,#66ffaa,#11aa44); color:#003311; border:2px solid rgba(100,255,150,0.6); }
+#btn-clean { width:min(80px, 18vw); height:min(80px, 18vw); font-size:min(27px, 6vw); background:radial-gradient(circle at 35% 35%,#66ffaa,#11aa44); color:#003311; border:2px solid rgba(100,255,150,0.6); }
 #btn-pause { width:46px; height:46px; font-size:14px; background:rgba(6,14,32,0.93); color:#88ccff; border:1px solid rgba(70,170,255,0.4); border-radius:50%; }
 #btn-bank  { width:46px; height:46px; font-size:14px; background:rgba(40,30,5,0.95); color:#ffd700; border:1px solid rgba(255,215,0,0.5); border-radius:50%; }
 #btn-music { width:46px; height:46px; font-size:14px; background:rgba(6,14,32,0.93); color:#cc88ff; border:1px solid rgba(180,100,255,0.4); border-radius:50%; }
@@ -151,20 +151,20 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 
 /* ── Small landscape phones (height < 380px) ── */
 @media screen and (max-height: 380px) and (orientation: landscape) {
-  #joystick-zone { width:100px !important; height:100px !important; bottom:50px !important; left:10px !important; }
-  #mobile-btns   { bottom:50px !important; right:10px !important; gap:6px !important; }
+  #joystick-zone { width:100px !important; height:100px !important; bottom:calc(50px + env(safe-area-inset-bottom, 0px)) !important; left:calc(10px + env(safe-area-inset-left, 0px)) !important; }
+  #mobile-btns   { bottom:calc(50px + env(safe-area-inset-bottom, 0px)) !important; right:calc(14px + env(safe-area-inset-right, 0px)) !important; gap:6px !important; }
   .mob-btn       { width:46px !important; height:46px !important; font-size:16px !important; }
-  #btn-clean     { width:58px !important; height:58px !important; font-size:20px !important; }
-  #exitBtn       { bottom:8px !important; right:8px !important; }
+  #btn-clean     { width:64px !important; height:64px !important; font-size:22px !important; }
+  #exitBtn       { bottom:calc(8px + env(safe-area-inset-bottom, 0px)) !important; right:calc(8px + env(safe-area-inset-right, 0px)) !important; }
   #refill        { bottom:155px !important; }
   #ui            { padding:3px 6px !important; }
 }
 /* ── Medium landscape phones (height 380-480px) ── */
 @media screen and (max-height: 480px) and (orientation: landscape) {
-  #joystick-zone { width:115px !important; height:115px !important; bottom:58px !important; }
-  #mobile-btns   { bottom:58px !important; gap:8px !important; }
-  .mob-btn       { width:52px !important; height:52px !important; }
-  #btn-clean     { width:65px !important; height:65px !important; font-size:23px !important; }
+  #joystick-zone { width:115px !important; height:115px !important; bottom:calc(58px + env(safe-area-inset-bottom, 0px)) !important; left:calc(max(12px, 2vw) + env(safe-area-inset-left, 0px)) !important; }
+  #mobile-btns   { bottom:calc(58px + env(safe-area-inset-bottom, 0px)) !important; right:calc(max(16px, 2.8vw) + env(safe-area-inset-right, 0px)) !important; gap:8px !important; }
+  .mob-btn       { width:56px !important; height:56px !important; }
+  #btn-clean     { width:74px !important; height:74px !important; font-size:25px !important; }
 }
 
 /* ── Retro Bank Styles ── */
@@ -307,7 +307,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
       </div>
       <div style="font-size:9px;color:#dddddd;
         text-shadow:0 0 6px rgba(0,0,0,1),1px 1px 2px rgba(0,0,0,1);">
-        Version 4.8.2
+        Version 4.8.3
       </div>
     </div>
   </div>
@@ -5535,7 +5535,7 @@ document.addEventListener('touchstart', function(){}, {passive:true});
 
     <div id="shareCopiedMsg" style="display:none;text-align:center;color:#44ddff;font-size:12px;margin:-2px 0 10px;letter-spacing:1px;">Link copied!</div>
 
-    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.8.2</span></div>
+    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.8.3</span></div>
 
     <button onclick="closeSettings()" style="display:block;margin:0 auto;padding:12px 40px;font-size:14px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#1a3a6a,#2255aa);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#fff;cursor:pointer;font-family:inherit;">🏠 Home</button>
   </div>
