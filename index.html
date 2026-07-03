@@ -4,10 +4,10 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2793848736357707"
      crossorigin="anonymous"></script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Solar Clean">
+<meta name="apple-mobile-web-app-title" content="SolarCleanGame">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0a0e1a">
 <meta name="description" content="Solar Clean — Clean solar panels in this fun mobile game!">
@@ -19,7 +19,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://scg.ninja-niv.com/">
 <meta property="og:image" content="https://scg.ninja-niv.com/icon.png">
-<title>Solar Clean 🌞 Mobile</title>
+<title>SolarCleanGame 🌞</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:100%; height:100%; overflow:hidden; }
@@ -42,7 +42,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 }
 
 /* ── HUD ── */
-#ui { position:fixed; top:10px; left:10px;
+#ui { position:fixed; top:calc(10px + env(safe-area-inset-top, 0px)); left:10px;
   display:flex; justify-content:flex-start; align-items:flex-start;
   pointer-events:none; z-index:10; gap:8px; flex-wrap:nowrap; }
 .box { background:rgba(6,14,32,0.93); border:1px solid rgba(70,170,255,0.3);
@@ -64,11 +64,11 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 #timersub { font-size:9px; color:#cc4422; margin-top:1px; }
 
 /* ── Side timers ── */
-#timers { position:fixed; top:68px; left:8px; pointer-events:none; z-index:10; display:flex; flex-direction:column; gap:3px; }
+#timers { position:fixed; top:calc(68px + env(safe-area-inset-top, 0px)); left:8px; pointer-events:none; z-index:10; display:flex; flex-direction:column; gap:3px; }
 .tbox { background:rgba(6,14,32,0.88); border:1px solid rgba(70,170,255,0.18); border-radius:5px; padding:3px 7px; font-size:10px; color:#88ccff; }
 
 /* ── Alert ── */
-#alert { position:fixed; top:68px; left:50%; transform:translateX(-50%);
+#alert { position:fixed; top:calc(68px + env(safe-area-inset-top, 0px)); left:50%; transform:translateX(-50%);
   background:rgba(170,80,5,0.97); border:1px solid rgba(255,150,30,0.5);
   border-radius:8px; padding:7px 18px; font-size:12px; letter-spacing:1px;
   z-index:20; display:none; white-space:nowrap; pointer-events:none; }
@@ -85,7 +85,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 .key b { color:#fff; }
 
 /* ── Exit button ── */
-#exitBtn { position:fixed; bottom:max(10px, 1.5vh); right:max(10px, 2vw); z-index:30;
+#exitBtn { position:fixed; bottom:calc(max(10px, 1.5vh) + env(safe-area-inset-bottom, 0px)); right:max(10px, 2vw); z-index:30;
   background:rgba(40,8,8,0.95); border:1px solid rgba(255,80,60,0.45);
   border-radius:10px; padding:10px 18px; font-size:13px; color:#ff7766;
   cursor:pointer; font-family:inherit; letter-spacing:1px;
@@ -307,7 +307,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
       </div>
       <div style="font-size:9px;color:#dddddd;
         text-shadow:0 0 6px rgba(0,0,0,1),1px 1px 2px rgba(0,0,0,1);">
-        Version 4.7.8
+        Version 4.8.1
       </div>
     </div>
   </div>
@@ -529,14 +529,24 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
   <button class="btn" id="startBtn" type="button"
     onclick="startGame()"
     style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;">▶ Start Cleaning</button>
-  <button type="button" onclick="openTutorial()"
-    style="margin-top:6px;padding:10px 28px;font-size:13px;letter-spacing:2px;
-    text-transform:uppercase;background:rgba(20,20,60,0.85);
-    border:1px solid rgba(68,170,255,0.6);border-radius:8px;
-    color:#44ddff;cursor:pointer;font-family:inherit;
-    -webkit-tap-highlight-color:transparent;touch-action:manipulation;">
-    📖 Tutorial
-  </button>
+  <div style="display:flex;gap:10px;margin-top:6px;justify-content:center;flex-wrap:wrap;">
+    <button type="button" onclick="openTutorial()"
+      style="padding:10px 22px;font-size:13px;letter-spacing:2px;
+      text-transform:uppercase;background:rgba(20,20,60,0.85);
+      border:1px solid rgba(68,170,255,0.6);border-radius:8px;
+      color:#44ddff;cursor:pointer;font-family:inherit;
+      -webkit-tap-highlight-color:transparent;touch-action:manipulation;">
+      📖 Tutorial
+    </button>
+    <button type="button" onclick="openSettings()"
+      style="padding:10px 22px;font-size:13px;letter-spacing:2px;
+      text-transform:uppercase;background:rgba(20,20,60,0.85);
+      border:1px solid rgba(68,170,255,0.6);border-radius:8px;
+      color:#44ddff;cursor:pointer;font-family:inherit;
+      -webkit-tap-highlight-color:transparent;touch-action:manipulation;">
+      ⚙️ Settings
+    </button>
+  </div>
 </div>
 
 
@@ -1560,6 +1570,16 @@ let autoTimer=0;
 // Birds — array supports multiple simultaneous birds
 let birds=[];
 let birdFlockTimer=24; // every 24s: 2-3 birds at once
+
+// ── Dust storm & rain shower (weather events) ──────────────────
+let dustStorm=null;
+let dustStormSpawned=false;
+let dustStormTimer=20;
+let rainCloud=null;
+let rainSpawned=false;
+let rainTimer=20;
+let puddles=[]; // {gx,gy,radius,life}
+let playerSlip=null;
 
 // ── Panel build — fixed slot grid, always within play field ───
 // The play field is a fixed set of SLOTS arranged in a 3-column × N-row
@@ -2738,6 +2758,15 @@ function startLevel(){
   camX=player.gx; camY=player.gy; // snap camera immediately
   waterLevel=1;saltLevel=1;particles=[];popups=[];
   birds=[];birdTimer=7;birdFlockTimer=24;leafTimer=28;powerTimer=20;
+  dustStorm=null;rainCloud=null;puddles=[];playerSlip=null;
+  // Each level gets EITHER a dust storm OR a rain shower, never both
+  if(Math.random()<0.5){
+    dustStormSpawned=false;dustStormTimer=15+Math.random()*20;
+    rainSpawned=true; // disable rain this level
+  } else {
+    rainSpawned=false;rainTimer=15+Math.random()*20;
+    dustStormSpawned=true; // disable storm this level
+  }
   saltCycleTimer=SPRINKLER_INTERVAL;levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0)+(extraTimeBought4?20:0);
   _alarmPlayed10=false;
   // Immediately update timer display so it shows 2:00 right away
@@ -2752,6 +2781,344 @@ function startLevel(){
   // Show level intro speech bubble
   const msg=LEVEL_MESSAGES[currentLevel];
   if(msg){speechBubble={active:true,timer:SPEECH_DURATION,text:msg};}
+}
+
+// ── Dust Storm ────────────────────────────────────────────────
+function spawnDustStorm(){
+  // Pick a random edge to enter from
+  const side=Math.floor(Math.random()*4);
+  let sx,sy,tx,ty;
+  const span=12;
+  if(side===0){sx=-span;sy=Math.random()*span;tx=span;ty=Math.random()*span;}
+  else if(side===1){sx=span;sy=Math.random()*span;tx=-span;ty=Math.random()*span;}
+  else if(side===2){sx=Math.random()*span;sy=-span;tx=Math.random()*span;ty=span;}
+  else{sx=Math.random()*span;sy=span;tx=Math.random()*span;ty=-span;}
+  const speed=2.5+Math.random()*1.5;
+  dustStorm={
+    gx:sx,gy:sy,
+    dx:(tx-sx),dy:(ty-sy),
+    speed:speed,
+    radius:3.6,   // ~5x player size in grid units
+    phase:0,      // for rotation animation
+    particles:[],
+    active:true,
+    warningShown:false,
+  };
+  // Pre-fill swirling particles
+  for(let i=0;i<40;i++){
+    const a=Math.random()*Math.PI*2;
+    const r=0.3+Math.random()*3.0;
+    dustStorm.particles.push({a,r,speed:0.8+Math.random()*1.4,size:8+Math.random()*22,opacity:0.35+Math.random()*0.5});
+  }
+  showAlert('🌪️ Dust storm incoming! Protect your panels!');
+}
+
+function updateDustStorm(dt){
+  if(!gameRunning)return;
+  // Spawn once per level
+  if(!dustStormSpawned){
+    dustStormTimer-=dt;
+    if(dustStormTimer<=0){dustStormSpawned=true;spawnDustStorm();}
+    return;
+  }
+  if(!dustStorm||!dustStorm.active)return;
+  const ds=dustStorm;
+  ds.phase+=dt*2.5;
+  // Move along direction
+  const dist=Math.sqrt(ds.dx*ds.dx+ds.dy*ds.dy);
+  const nx=ds.dx/dist,ny=ds.dy/dist;
+  ds.gx+=nx*ds.speed*dt;
+  ds.gy+=ny*ds.speed*dt;
+  // Check if passed destination
+  const traveled=(ds.gx-(-nx*dist/2))*(nx)+(ds.gy-(-ny*dist/2))*(ny);
+  if(traveled>dist*1.2){ds.active=false;return;}
+  // Dirty nearby panels
+  for(const p of panels){
+    if(p.destroyed)continue;
+    const pdx=p.gx-ds.gx,pdy=p.gy-ds.gy;
+    const d=Math.sqrt(pdx*pdx+pdy*pdy);
+    if(d<ds.radius*1.1){
+      // Make very dirty — set to max dirt + poop effect
+      p.dirtLevel=1.0;
+      p.dirtTimer=0;
+    }
+  }
+}
+
+function drawDustStorm(){
+  if(!dustStorm||!dustStorm.active)return;
+  const ds=dustStorm;
+  const sc=iso(ds.gx,ds.gy,0.5);
+  const psc=iso(ds.gx,ds.gy+ds.radius,0.5);
+  const radiusPx=Math.abs(sc.y-psc.y)*1.4;
+  const towerH=radiusPx*3.8;
+  ctx.save();
+  ctx.translate(sc.x,sc.y);
+
+  // Ground shadow
+  ctx.save();
+  ctx.globalAlpha=0.2;
+  ctx.fillStyle='#334';
+  ctx.beginPath();ctx.ellipse(0,0,radiusPx*0.9,radiusPx*0.25,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  // ── Draw smooth tornado body using horizontal band layers ──
+  // Each layer is an ellipse band at a given height, narrowing toward bottom
+  const numBands=18;
+  for(let i=0;i<numBands;i++){
+    const frac=i/(numBands-1); // 0=bottom tip, 1=top wide
+    const y=-frac*towerH;
+    // Width narrows quadratically toward tip
+    const bandW=radiusPx*(0.04+0.96*Math.pow(frac,0.7));
+    const bandH=bandW*0.28;
+    // Color: lighter blue-gray at top, darker gray toward bottom
+    const light=Math.floor(155+frac*60);
+    const blue=Math.floor(light+frac*18);
+    const alpha=0.55+frac*0.25;
+    // Rotation offset for swirl effect
+    const twist=ds.phase*1.2+frac*Math.PI*3.5;
+    ctx.save();
+    ctx.globalAlpha=alpha;
+    // Main band fill
+    ctx.fillStyle=`rgb(${light-10},${light},${blue+15})`;
+    ctx.beginPath();
+    ctx.ellipse(Math.cos(twist)*bandW*0.12,y,bandW,bandH,0,0,Math.PI*2);
+    ctx.fill();
+    // Highlight streak on each band
+    ctx.fillStyle=`rgba(255,255,255,${0.08+frac*0.14})`;
+    ctx.beginPath();
+    ctx.ellipse(
+      Math.cos(twist+0.4)*bandW*0.3,
+      y-bandH*0.1,
+      bandW*0.45, bandH*0.35,
+      Math.sin(twist)*0.4, 0, Math.PI*2
+    );
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ── Dark outer edge outline (the dark border in the photo) ──
+  // Draw using a series of arcs along both sides of the funnel
+  ctx.save();
+  ctx.strokeStyle='rgba(60,65,100,0.55)';
+  ctx.lineWidth=3;
+  ctx.lineCap='round';
+  ctx.lineJoin='round';
+  // Left edge
+  ctx.beginPath();
+  for(let i=0;i<=numBands;i++){
+    const frac=i/numBands;
+    const y=-frac*towerH;
+    const bandW=radiusPx*(0.03+0.97*Math.pow(frac,0.7));
+    const twist=ds.phase*1.2+frac*Math.PI*3.5;
+    const x=Math.cos(twist)*bandW*0.12-bandW+Math.sin(twist+frac*2)*bandW*0.06;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  // Right edge
+  ctx.beginPath();
+  for(let i=0;i<=numBands;i++){
+    const frac=i/numBands;
+    const y=-frac*towerH;
+    const bandW=radiusPx*(0.03+0.97*Math.pow(frac,0.7));
+    const twist=ds.phase*1.2+frac*Math.PI*3.5;
+    const x=Math.cos(twist)*bandW*0.12+bandW+Math.sin(twist+frac*2)*bandW*0.06;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  ctx.restore();
+
+  // ── Swirl lines across the body ──
+  const numSwirls=8;
+  for(let s=0;s<numSwirls;s++){
+    const startFrac=s/numSwirls;
+    const twist0=ds.phase*1.2+startFrac*Math.PI*3.5;
+    ctx.save();
+    ctx.strokeStyle=`rgba(80,85,115,0.35)`;
+    ctx.lineWidth=1.5;ctx.lineCap='round';
+    ctx.beginPath();
+    for(let t=0;t<=12;t++){
+      const frac=startFrac+t*0.05;
+      if(frac>1)break;
+      const y=-frac*towerH;
+      const bandW=radiusPx*(0.03+0.97*Math.pow(frac,0.7));
+      const twist=ds.phase*1.2+frac*Math.PI*3.5;
+      const x=Math.cos(twist)*bandW*0.7;
+      t===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── Top cloud cap ──
+  ctx.save();
+  ctx.globalAlpha=0.75;
+  const topGrad=ctx.createRadialGradient(0,-towerH,0,0,-towerH,radiusPx*1.15);
+  topGrad.addColorStop(0,'rgba(130,140,175,0.95)');
+  topGrad.addColorStop(0.5,'rgba(110,120,160,0.7)');
+  topGrad.addColorStop(1,'rgba(70,80,120,0.0)');
+  ctx.fillStyle=topGrad;
+  ctx.beginPath();ctx.ellipse(0,-towerH,radiusPx*1.15,radiusPx*0.38,0,0,Math.PI*2);
+  ctx.fill();
+  // Dark border on cap
+  ctx.strokeStyle='rgba(50,55,90,0.6)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.ellipse(0,-towerH,radiusPx*1.15,radiusPx*0.38,0,0,Math.PI*2);
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.restore();
+}
+
+// ── Rain Shower ───────────────────────────────────────────────
+function spawnRainCloud(){
+  const side=Math.floor(Math.random()*4);
+  let sx,sy,tx,ty;
+  const span=12;
+  if(side===0){sx=-span;sy=Math.random()*span;tx=span;ty=Math.random()*span;}
+  else if(side===1){sx=span;sy=Math.random()*span;tx=-span;ty=Math.random()*span;}
+  else if(side===2){sx=Math.random()*span;sy=-span;tx=Math.random()*span;ty=span;}
+  else{sx=Math.random()*span;sy=span;tx=Math.random()*span;ty=-span;}
+  const speed=1.8+Math.random()*0.8;
+  rainCloud={
+    gx:sx,gy:sy,
+    dx:(tx-sx),dy:(ty-sy),
+    speed:speed,
+    radius:2.6,
+    phase:0,
+    drops:[],
+    active:true,
+    puddleTimer:0,
+  };
+  for(let i=0;i<35;i++){
+    rainCloud.drops.push({
+      ox:(Math.random()-0.5)*2,
+      oy:(Math.random()-0.5)*2,
+      fall:Math.random(),
+      speed:1.5+Math.random()*1.5,
+      len:6+Math.random()*8
+    });
+  }
+  showAlert('🌧️ Rain shower incoming! Watch for puddles!');
+}
+
+function updateRain(dt){
+  if(!gameRunning)return;
+  if(!rainSpawned){
+    rainTimer-=dt;
+    if(rainTimer<=0){rainSpawned=true;spawnRainCloud();}
+  } else if(rainCloud&&rainCloud.active){
+    const rc=rainCloud;
+    rc.phase+=dt*3;
+    const dist=Math.sqrt(rc.dx*rc.dx+rc.dy*rc.dy);
+    const nx=rc.dx/dist,ny=rc.dy/dist;
+    rc.gx+=nx*rc.speed*dt;
+    rc.gy+=ny*rc.speed*dt;
+    const traveled=(rc.gx-(-nx*dist/2))*(nx)+(rc.gy-(-ny*dist/2))*(ny);
+    if(traveled>dist*1.2){rc.active=false;}
+    else{
+      // Clean panels under the rain
+      for(const p of panels){
+        if(p.destroyed)continue;
+        const pdx=p.gx-rc.gx,pdy=p.gy-rc.gy;
+        const d=Math.sqrt(pdx*pdx+pdy*pdy);
+        if(d<rc.radius){
+          p.dirtLevel=Math.max(0,p.dirtLevel-dt*0.45);
+          if(p.dirtLevel<=0){p.dirtLevel=0;p.poop=false;p.leaf=false;}
+        }
+      }
+      // Drop puddles periodically under the cloud
+      rc.puddleTimer-=dt;
+      if(rc.puddleTimer<=0){
+        rc.puddleTimer=0.5+Math.random()*0.4;
+        const pa=Math.random()*Math.PI*2;
+        const pr=Math.random()*rc.radius*0.8;
+        puddles.push({
+          gx:rc.gx+Math.cos(pa)*pr,
+          gy:rc.gy+Math.sin(pa)*pr,
+          radius:0.55,
+          life:8+Math.random()*4,
+          maxLife:8+Math.random()*4
+        });
+      }
+    }
+  }
+  // Fade out and remove old puddles
+  for(let i=puddles.length-1;i>=0;i--){
+    puddles[i].life-=dt;
+    if(puddles[i].life<=0)puddles.splice(i,1);
+  }
+}
+
+function drawRainCloud(){
+  if(!rainCloud||!rainCloud.active)return;
+  const rc=rainCloud;
+  const sc=iso(rc.gx,rc.gy,0.5);
+  const psc=iso(rc.gx,rc.gy+rc.radius,0.5);
+  const radiusPx=Math.abs(sc.y-psc.y)*1.4;
+  ctx.save();
+  ctx.translate(sc.x,sc.y-radiusPx*1.6);
+
+  // Cloud body — soft gray-white puffs
+  ctx.save();
+  ctx.globalAlpha=0.85;
+  const puffs=[
+    {x:-radiusPx*0.55,y:0,r:radiusPx*0.55},
+    {x:-radiusPx*0.1,y:-radiusPx*0.2,r:radiusPx*0.65},
+    {x:radiusPx*0.4,y:0,r:radiusPx*0.55},
+    {x:radiusPx*0.75,y:radiusPx*0.12,r:radiusPx*0.4},
+    {x:-radiusPx*0.85,y:radiusPx*0.15,r:radiusPx*0.4},
+  ];
+  for(const pf of puffs){
+    const cg=ctx.createRadialGradient(pf.x,pf.y-pf.r*0.2,pf.r*0.1,pf.x,pf.y,pf.r);
+    cg.addColorStop(0,'rgba(235,238,242,0.95)');
+    cg.addColorStop(0.7,'rgba(190,198,210,0.9)');
+    cg.addColorStop(1,'rgba(150,160,175,0.7)');
+    ctx.fillStyle=cg;
+    ctx.beginPath();ctx.arc(pf.x,pf.y,pf.r,0,Math.PI*2);ctx.fill();
+  }
+  ctx.restore();
+
+  // Falling rain drops below the cloud
+  for(const d of rc.drops){
+    const f=(d.fall+rc.phase*d.speed*0.15)%1;
+    const dx=d.ox*radiusPx;
+    const dyTop=radiusPx*0.3+f*radiusPx*2.2;
+    ctx.save();
+    ctx.globalAlpha=0.5*(1-f*0.5);
+    ctx.strokeStyle='rgba(140,180,220,0.8)';
+    ctx.lineWidth=1.8;ctx.lineCap='round';
+    ctx.beginPath();
+    ctx.moveTo(dx,dyTop);
+    ctx.lineTo(dx-2,dyTop+d.len);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+function drawPuddles(){
+  for(const pu of puddles){
+    const sc=iso(pu.gx,pu.gy,0.02);
+    const fadeIn=Math.min(1,(pu.maxLife-pu.life)/0.6);
+    const fadeOut=Math.min(1,pu.life/1.2);
+    const alpha=Math.min(fadeIn,fadeOut)*0.55;
+    ctx.save();
+    ctx.translate(sc.x,sc.y);
+    ctx.globalAlpha=alpha;
+    const pgrad=ctx.createRadialGradient(0,0,1,0,0,26);
+    pgrad.addColorStop(0,'rgba(150,200,230,0.9)');
+    pgrad.addColorStop(0.6,'rgba(100,160,200,0.6)');
+    pgrad.addColorStop(1,'rgba(80,140,180,0.0)');
+    ctx.fillStyle=pgrad;
+    ctx.beginPath();ctx.ellipse(0,0,26,12,0,0,Math.PI*2);ctx.fill();
+    // Shine highlight
+    ctx.globalAlpha=alpha*0.7;
+    ctx.fillStyle='rgba(255,255,255,0.5)';
+    ctx.beginPath();ctx.ellipse(-6,-3,7,3,0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
 }
 
 // ── Birds (multi-bird system) ──────────────────────────────────
@@ -3181,6 +3548,40 @@ function openTutorial() {
 function closeTutorial() {
   var t = document.getElementById('tutorialOverlay');
   if (t) t.style.display = 'none';
+}
+
+var PLAY_STORE_PACKAGE = 'com.solarcleangame.app';
+var PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=' + PLAY_STORE_PACKAGE;
+
+function openSettings() {
+  var s = document.getElementById('settingsOverlay');
+  if (s) {
+    s.style.display = 'flex';
+    s.style.zIndex = '2000';
+    s.scrollTop = 0;
+  }
+}
+function closeSettings() {
+  var s = document.getElementById('settingsOverlay');
+  if (s) s.style.display = 'none';
+}
+function rateGame() {
+  window.open(PLAY_STORE_URL, '_blank');
+}
+function shareGame() {
+  var shareData = {
+    title: 'SolarCleanGame',
+    text: 'Check out SolarCleanGame — clean solar panels and beat the clock! 🌞',
+    url: PLAY_STORE_URL
+  };
+  if (navigator.share) {
+    navigator.share(shareData).catch(function(){});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(PLAY_STORE_URL).then(function(){
+      var m = document.getElementById('shareCopiedMsg');
+      if (m) { m.style.display = 'block'; setTimeout(function(){ m.style.display = 'none'; }, 2000); }
+    }).catch(function(){});
+  }
 }
 
 function fullRestart(){
@@ -3840,11 +4241,11 @@ function drawPanel(p){
     const sp=iso(px+.15, py+.12, gz+.22);
     const sc2=p.poopScale||1;
     const isYellow = p.poopYellow;
-    // Yellow = old poop baked in the sun; white = fresh
-    const mainCol   = isYellow ? 'rgba(210,185,40,0.97)'  : 'rgba(240,238,220,0.97)';
-    const coreCol   = isYellow ? 'rgba(175,148,18,0.92)'  : 'rgba(210,205,170,0.9)';
-    const dripCol   = isYellow ? 'rgba(200,175,35,0.90)'  : 'rgba(235,232,210,0.9)';
-    const spotCol   = isYellow ? 'rgba(190,165,28,0.75)'  : 'rgba(230,228,205,0.7)';
+    // Yellow = old poop baked in the sun; white = fresh (neutral, no yellow cast)
+    const mainCol   = isYellow ? 'rgba(210,185,40,0.97)'  : 'rgba(238,238,238,0.97)';
+    const coreCol   = isYellow ? 'rgba(175,148,18,0.92)'  : 'rgba(200,200,200,0.9)';
+    const dripCol   = isYellow ? 'rgba(200,175,35,0.90)'  : 'rgba(232,232,232,0.9)';
+    const spotCol   = isYellow ? 'rgba(190,165,28,0.75)'  : 'rgba(225,225,225,0.7)';
     ctx.save();
     ctx.translate(sp.x,sp.y);
     ctx.transform(1,0.28,-0.5,0.86,0,0);
@@ -4741,6 +5142,37 @@ function loop(now){
     player.face=Math.atan2(my,mx);
   }
 
+  // ── Puddle slip check ───────────────────────────────────────
+  if(!playerSlip){
+    for(const pu of puddles){
+      const pd=Math.hypot(player.gx-pu.gx,player.gy-pu.gy);
+      if(pd<pu.radius){
+        // Trigger a slip — push player sideways in a random perpendicular direction
+        const baseAngle=Math.atan2(my||1,mx||1);
+        const slipAngle=baseAngle+(Math.random()<0.5?1:-1)*Math.PI/2;
+        playerSlip={
+          dx:Math.cos(slipAngle),
+          dy:Math.sin(slipAngle),
+          timer:0.55,
+          totalTime:0.55
+        };
+        showAlert('💦 Slipped on a puddle!');
+        break;
+      }
+    }
+  }
+  if(playerSlip){
+    playerSlip.timer-=dt;
+    const slipSpeed=SPEED*2.2*(playerSlip.timer/playerSlip.totalTime);
+    const sdx=playerSlip.dx*slipSpeed*dt;
+    const sdy=playerSlip.dy*slipSpeed*dt;
+    const snx=player.gx+sdx, sny=player.gy+sdy;
+    if(!panelBlocks(snx,sny)){player.gx=snx;player.gy=sny;}
+    player.gx=Math.max(-16,Math.min(14,player.gx));
+    player.gy=Math.max(-10,Math.min(15,player.gy));
+    if(playerSlip.timer<=0)playerSlip=null;
+  }
+
   // ── Sweep anim ─────────────────────────────────────────────
   if(player.sweeping){
     player.sweepPh+=dt*7; // faster scrubbing
@@ -4799,6 +5231,8 @@ function loop(now){
   if(birdFlockTimer<=0){birdFlockTimer=24;launchFlock();}
 
   updateBirds(dt);
+  updateDustStorm(dt);
+  updateRain(dt);
   updateCamera(dt);
   leafTimer-=dt;
   document.getElementById('lcd').textContent=Math.max(0,Math.ceil(leafTimer));
@@ -4844,7 +5278,7 @@ function loop(now){
   updateParticles(dt);
 
   // ── Draw ───────────────────────────────────────────────────
-  drawSky();drawGround();renderScene();drawBirds();drawParticles();drawSpeechBubble();
+  drawSky();drawGround();drawPuddles();renderScene();drawBirds();drawDustStorm();drawRainCloud();drawParticles();drawSpeechBubble();
 
   if(tdist<2.5){
     const ts=iso(tx,ty,3.2);
@@ -4881,7 +5315,16 @@ function initGame(){
   extraTimeBought1=false;extraTimeBought2=false;extraTimeBought3=false;extraTimeBought4=false;
   stopMusic(); musicStarted=false;
   speechBubble={active:false,timer:0,text:''};
-  birds=[];birdTimer=7;birdFlockTimer=24;leafTimer=28;powerTimer=20;saltCycleTimer=SPRINKLER_INTERVAL;levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0)+(extraTimeBought4?20:0);
+  birds=[];birdTimer=7;birdFlockTimer=24;leafTimer=28;powerTimer=20;
+  dustStorm=null;rainCloud=null;puddles=[];playerSlip=null;
+  if(Math.random()<0.5){
+    dustStormSpawned=false;dustStormTimer=15+Math.random()*20;
+    rainSpawned=true;
+  } else {
+    rainSpawned=false;rainTimer=15+Math.random()*20;
+    dustStormSpawned=true;
+  }
+  saltCycleTimer=SPRINKLER_INTERVAL;levelTimeLeft=LEVEL_TIME+(extraTimeBought1?20:0)+(extraTimeBought2?20:0)+(extraTimeBought3?20:0)+(extraTimeBought4?20:0);
   _alarmPlayed10=false;
   levelingUp=false;paused=false;
   // Reset all panel destruction state
@@ -5070,6 +5513,31 @@ document.addEventListener('touchstart', function(){}, {passive:true});
       <p style="color:#cce8ff;font-size:13px;line-height:1.7;">Clean <b>100 panels/day</b>. 6-day streak = <b style="color:#ffd700;">1,000,000 bonus pts</b> on day 6!</p>
     </div>
     <button onclick="closeTutorial()" style="display:block;margin:0 auto;padding:12px 40px;font-size:14px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#1a3a6a,#2255aa);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#fff;cursor:pointer;font-family:inherit;">🏠 Home</button>
+  </div>
+</div>
+
+<!-- Settings Overlay -->
+<div id="settingsOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(3,7,20,0.97);z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="max-width:480px;width:90%;margin:0 auto;padding:calc(20px + env(safe-area-inset-top, 0px)) 0 30px;font-family:Arial,sans-serif;">
+    <h2 style="color:#44ddff;font-size:20px;letter-spacing:2px;text-align:center;margin-bottom:16px;">⚙️ Settings</h2>
+
+    <button onclick="rateGame()" style="display:flex;align-items:center;gap:10px;width:100%;margin-bottom:10px;padding:14px 16px;background:rgba(6,14,32,0.8);border:1px solid rgba(68,170,255,0.3);border-radius:10px;color:#cce8ff;font-size:14px;cursor:pointer;font-family:inherit;text-align:left;-webkit-tap-highlight-color:transparent;touch-action:manipulation;">
+      <span style="font-size:20px;">⭐</span> Rate Game
+    </button>
+
+    <button onclick="shareGame()" style="display:flex;align-items:center;gap:10px;width:100%;margin-bottom:10px;padding:14px 16px;background:rgba(6,14,32,0.8);border:1px solid rgba(68,170,255,0.3);border-radius:10px;color:#cce8ff;font-size:14px;cursor:pointer;font-family:inherit;text-align:left;-webkit-tap-highlight-color:transparent;touch-action:manipulation;">
+      <span style="font-size:20px;">📤</span> Share Game
+    </button>
+
+    <a href="https://solarcleangame.com/privacy.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;width:100%;margin-bottom:10px;padding:14px 16px;background:rgba(6,14,32,0.8);border:1px solid rgba(68,170,255,0.3);border-radius:10px;color:#cce8ff;font-size:14px;text-decoration:none;box-sizing:border-box;">
+      <span style="font-size:20px;">🔒</span> Privacy Policy
+    </a>
+
+    <div id="shareCopiedMsg" style="display:none;text-align:center;color:#44ddff;font-size:12px;margin:-2px 0 10px;letter-spacing:1px;">Link copied!</div>
+
+    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.8.1</span></div>
+
+    <button onclick="closeSettings()" style="display:block;margin:0 auto;padding:12px 40px;font-size:14px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#1a3a6a,#2255aa);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#fff;cursor:pointer;font-family:inherit;">🏠 Home</button>
   </div>
 </div>
 
