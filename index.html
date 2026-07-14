@@ -307,7 +307,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
       </div>
       <div style="font-size:9px;color:#dddddd;
         text-shadow:0 0 6px rgba(0,0,0,1),1px 1px 2px rgba(0,0,0,1);">
-        Version 4.8.4
+        Version 4.8.7
       </div>
     </div>
   </div>
@@ -908,6 +908,11 @@ const C={
 let panels=[],particles=[],popups=[];
 let player={gx:0,gy:6,gz:0,face:0,walkPh:0,sweepPh:0,sweeping:false};
 let waterLevel=1,saltLevel=1,score=0,bankTotal=0,poopTotal=0,leafTotal=0;
+// Tracks whether the player kept both water and salt above empty for the
+// WHOLE current level — powers the "finish without running dry" +10% bonus.
+// Reset true at the start of every level; flipped false the moment either
+// resource hits empty (see the noWater/noSalt check in the per-frame loop).
+let neverRanDryThisLevel=true;
 let gameRunning=false,paused=false;
 let birdTimer=7,leafTimer=28,powerTimer=20;
 let levelTimeLeft=120; // 2 minutes
@@ -1081,6 +1086,100 @@ function getSfxCtx() {
   return sfxCtx;
 }
 
+
+// ── Weather ambient loops ───────────────────────────────────────
+// Continuous looping sounds tied to the rain shower / dust storm
+// lifecycle, started when each event spawns and faded out when it
+// finishes crossing the map.
+let rainSfx = null, stormSfx = null;
+
+function makeSfxNoiseBuffer(ac, seconds){
+  const buf = ac.createBuffer(1, Math.floor(ac.sampleRate*seconds), ac.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+  return buf;
+}
+
+function startRainSfx(){
+  try{
+    const ac = getSfxCtx(); if(!ac || rainSfx) return;
+    const master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+    master.gain.linearRampToValueAtTime(SFX_VOLUME*0.5, ac.currentTime+0.8);
+    const buf = makeSfxNoiseBuffer(ac, 2);
+    const src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
+    const filt = ac.createBiquadFilter(); filt.type = 'highpass'; filt.frequency.value = 4000;
+    const g = ac.createGain(); g.gain.value = 0.04;
+    src.connect(filt); filt.connect(g); g.connect(master);
+    src.start();
+    const dropletTimer = setInterval(()=>{
+      if(!rainSfx) return;
+      const t = ac.currentTime;
+      const dbuf = makeSfxNoiseBuffer(ac, 0.05);
+      const dsrc = ac.createBufferSource(); dsrc.buffer = dbuf;
+      const dfilt = ac.createBiquadFilter(); dfilt.type = 'bandpass';
+      dfilt.frequency.value = 2500 + Math.random()*2500; dfilt.Q.value = 2;
+      const dg = ac.createGain();
+      dg.gain.setValueAtTime(0.12*SFX_VOLUME*(0.5+Math.random()*0.5), t);
+      dg.gain.exponentialRampToValueAtTime(0.001, t+0.05);
+      dsrc.connect(dfilt); dfilt.connect(dg); dg.connect(ac.destination);
+      dsrc.start(t); dsrc.stop(t+0.06);
+    }, 180);
+    rainSfx = { master, src, dropletTimer };
+  }catch(e){
+    console.error('[SFX] startRainSfx FAILED:', e);
+  }
+}
+
+function stopRainSfx(){
+  if(!rainSfx) return;
+  const ac = getSfxCtx();
+  clearInterval(rainSfx.dropletTimer);
+  const { master, src } = rainSfx;
+  if(ac){
+    master.gain.setTargetAtTime(0, ac.currentTime, 0.4);
+    setTimeout(()=>{ try{ src.stop(); }catch(e){} }, 1200);
+  }
+  rainSfx = null;
+}
+
+function startStormSfx(){
+  try{
+    const ac = getSfxCtx(); if(!ac || stormSfx) return;
+    const master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+    master.gain.linearRampToValueAtTime(SFX_VOLUME*0.9, ac.currentTime+1.0);
+    const buf = makeSfxNoiseBuffer(ac, 3);
+    const src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
+    const filt = ac.createBiquadFilter(); filt.type = 'lowpass'; filt.Q.value = 0.3; filt.frequency.value = 260;
+    const g = ac.createGain(); g.gain.value = 0.16;
+    src.connect(filt); filt.connect(g); g.connect(master);
+    src.start();
+    const startTime = ac.currentTime;
+    const period = 5;
+    const swellTimer = setInterval(()=>{
+      if(!stormSfx) return;
+      const t = ac.currentTime;
+      const phase = ((t-startTime) % period) / period;
+      const wave = 0.5 - 0.5*Math.cos(phase*Math.PI*2);
+      filt.frequency.setTargetAtTime(260 + wave*140, t, 0.6);
+      g.gain.setTargetAtTime(0.16 + wave*0.09, t, 0.6);
+    }, 150);
+    stormSfx = { master, src, swellTimer };
+  }catch(e){
+    console.error('[SFX] startStormSfx FAILED:', e);
+  }
+}
+
+function stopStormSfx(){
+  if(!stormSfx) return;
+  const ac = getSfxCtx();
+  clearInterval(stormSfx.swellTimer);
+  const { master, src } = stormSfx;
+  if(ac){
+    master.gain.setTargetAtTime(0, ac.currentTime, 0.5);
+    setTimeout(()=>{ try{ src.stop(); }catch(e){} }, 1500);
+  }
+  stormSfx = null;
+}
 
 // ── Clean Sound Variants ──────────────────────────────────────
 // 1 = Squeegee (wet squeak)   2 = Pop (bubble pop)
@@ -2080,6 +2179,12 @@ async function doLevelUp(){
   const _mm=Math.floor(levelTimeLeft/60),_ss=Math.floor(levelTimeLeft%60);
   document.getElementById('timerval').textContent=_mm+':'+(String(_ss).padStart(2,'0'));
   document.getElementById('timerval').style.color='#ff6644';
+  // "No refills" bonus: +10% on this level's score if water/salt never hit empty
+  if(neverRanDryThisLevel && score>0){
+    const bonus = Math.round(score*0.10);
+    score += bonus;
+    showAlert(`💧 No refills needed! +10% bonus: +${bonus.toLocaleString()} pts`);
+  }
   // Bank the score and reset
   bankTotal+=score;
   score=0;
@@ -2757,8 +2862,10 @@ function startLevel(){
   player.gx=-4;player.gy=3;  // near water tank, avoids being stuck inside panels
   camX=player.gx; camY=player.gy; // snap camera immediately
   waterLevel=1;saltLevel=1;particles=[];popups=[];
+  neverRanDryThisLevel=true;
   birds=[];birdTimer=7;birdFlockTimer=24;leafTimer=28;powerTimer=20;
   dustStorm=null;rainCloud=null;puddles=[];playerSlip=null;
+  stopRainSfx(); stopStormSfx();
   // Each level gets EITHER a dust storm OR a rain shower, never both
   if(Math.random()<0.5){
     dustStormSpawned=false;dustStormTimer=15+Math.random()*20;
@@ -2811,6 +2918,7 @@ function spawnDustStorm(){
     dustStorm.particles.push({a,r,speed:0.8+Math.random()*1.4,size:8+Math.random()*22,opacity:0.35+Math.random()*0.5});
   }
   showAlert('🌪️ Dust storm incoming! Protect your panels!');
+  startStormSfx();
 }
 
 function updateDustStorm(dt){
@@ -2831,7 +2939,7 @@ function updateDustStorm(dt){
   ds.gy+=ny*ds.speed*dt;
   // Check if passed destination
   const traveled=(ds.gx-(-nx*dist/2))*(nx)+(ds.gy-(-ny*dist/2))*(ny);
-  if(traveled>dist*1.2){ds.active=false;return;}
+  if(traveled>dist*1.2){ds.active=false;stopStormSfx();return;}
   // Dirty nearby panels
   for(const p of panels){
     if(p.destroyed)continue;
@@ -3000,6 +3108,7 @@ function spawnRainCloud(){
     });
   }
   showAlert('🌧️ Rain shower incoming! Watch for puddles!');
+  startRainSfx();
 }
 
 function updateRain(dt){
@@ -3015,7 +3124,7 @@ function updateRain(dt){
     rc.gx+=nx*rc.speed*dt;
     rc.gy+=ny*rc.speed*dt;
     const traveled=(rc.gx-(-nx*dist/2))*(nx)+(rc.gy-(-ny*dist/2))*(ny);
-    if(traveled>dist*1.2){rc.active=false;}
+    if(traveled>dist*1.2){rc.active=false;stopRainSfx();}
     else{
       // Clean panels under the rain
       for(const p of panels){
@@ -3222,6 +3331,7 @@ function updateBirds(dt){
           if(b.target.dirtCount >= 3 && !b.target.destroyed) {
             b.target.destroyed = true;
             showAlert('💥 Panel destroyed by neglect! Too many droppings!');
+            checkDestroyedRowsGameOver();
           }
           const s=iso(b.target.gx+.9,b.target.gy+.4,b.target.gz+.6);
           const pSize = b.type==='crow' ? 14 : b.type==='pigeon' ? 9 : 6;
@@ -3252,6 +3362,21 @@ function updateBirds(dt){
   }
 }
 
+// Any 3 destroyed panels, anywhere = game over. (Row-based logic was
+// considered but isometric skew makes rows impossible to eyeball on
+// screen — same-row panels land at different heights — so this is a
+// flat count instead.)
+function checkDestroyedRowsGameOver(){
+  if(!gameRunning) return;
+  const destroyedCount = panels.reduce((n,p)=>n+(p.destroyed?1:0),0);
+  if(destroyedCount >= 3){
+    gameOver(
+      `3 panels were destroyed — array failure!`,
+      '💥 <span>System Failure!</span>'
+    );
+  }
+}
+
 // ── Leaf ──────────────────────────────────────────────────────
 function dropLeaf(){
   if(!gameRunning)return;
@@ -3263,6 +3388,7 @@ function dropLeaf(){
   if(p.dirtCount >= 3 && !p.destroyed) {
     p.destroyed = true;
     showAlert('💥 Panel destroyed by neglect! Too many leaves!');
+    checkDestroyedRowsGameOver();
   }
   const s=iso(p.gx+.9,p.gy+.4,p.gz+1.5);
   particles.push({x:s.x,y:s.y-60,vx:(Math.random()-.5)*2,vy:3,life:1.2,col:C.leafP,r:7});
@@ -3441,7 +3567,8 @@ function cancelExit(){
   document.getElementById('exitConfirm').style.display='none';
   if(paused) togglePause(); // resume
 }
-async function gameOver(reason){
+async function gameOver(reason, title){
+  title = title || "⏱ <span>Time's Up!</span>";
   gameRunning=false;
   stopMusic();
   showMobileControls(false);
@@ -3464,7 +3591,8 @@ async function gameOver(reason){
   ov.classList.remove('splash-bg');
   function renderGameOver(boardHTML, rankLabel) {
     ov.innerHTML = `
-      <h1>⏱ <span>Time's Up!</span></h1>
+      <h1>${title}</h1>
+      ${reason ? `<div style="margin:4px auto 0;font-size:12px;color:#ffaa88;text-align:center;max-width:380px">${reason}</div>` : ''}
       <div style="margin:6px auto 2px;padding:8px 16px;background:rgba(6,14,32,0.8);border-radius:8px;font-size:12px;color:#fff;text-align:center;max-width:380px">${_dailyMsg}</div>
       <p style="margin-bottom:4px">
       Level score: <b>${score.toLocaleString()}</b> + Bank: <b>${bankTotal.toLocaleString()}</b> = <b style="color:#ffee44;font-size:16px">${totalScore.toLocaleString()} pts</b><br>
@@ -3678,6 +3806,68 @@ function isoBox(gx,gy,gz,gw,gd,gh,cT,cL,cR,alpha=1){
   ctx.globalAlpha=1;
 }
 
+// ── Grass ground texture helpers ────────────────────────────────
+// Low-frequency layered-sine "patch" noise picks which tiles get a
+// tuft or a pebble, so placement reads as scattered/natural rather
+// than a strict pattern.
+function grassPatchNoise(x,y){
+  const n = Math.sin(x*0.15)*Math.cos(y*0.18)
+          + Math.sin((x+y)*0.09)*0.6
+          + Math.sin((x*0.6-y*0.4)*0.12)*0.4;
+  return (n+2.0)/4.0; // roughly 0..1
+}
+// Single flat grass tone, kept as a checkerboard pair (not one flat
+// color) purely for the same subtle per-tile crispness the ground
+// always had, not for variation.
+const GRASS_A='#2e5019', GRASS_B='#233f14', GRASS_E='#16290d';
+// Small scattered grass tufts (a few curved blade strokes). Placed on
+// a sparse, deterministic subset of tiles (~6%) via a second,
+// differently-offset noise channel so tuft placement doesn't line up
+// with the tone patches.
+function drawGrassTuft(gx,gy,seed){
+  const s=iso(gx+0.5,gy+0.5,0.02);
+  ctx.save();
+  ctx.translate(s.x,s.y);
+  ctx.strokeStyle='#345522';
+  ctx.lineWidth=2;
+  ctx.lineCap='round';
+  for(let i=0;i<4;i++){
+    const a=(i/3-0.5)*1.1 + Math.sin(seed+i)*0.15;
+    const h=8 + (Math.sin(seed*3+i)+1)*4.5;
+    ctx.beginPath();
+    ctx.moveTo(a*3,2);
+    ctx.quadraticCurveTo(a*7,-h*0.6, a*10+Math.sin(seed+i)*3,-h);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+// Small scattered pebbles — flat-shaded angular polygons (2-3 facets)
+// in muted tan/grey-brown, breaking up the flat green.
+function drawRock(gx,gy,seed){
+  const s=iso(gx+0.5,gy+0.5,0.03);
+  const sz=5+((Math.sin(seed*1.7)+1)*3); // ~5-11px
+  ctx.save();
+  ctx.translate(s.x,s.y);
+  ctx.rotate(seed%3);
+  // Top facet (lit)
+  ctx.fillStyle='#8a7a5c';
+  ctx.beginPath();
+  ctx.moveTo(0,-sz*0.9);
+  ctx.lineTo(sz*0.85,-sz*0.1);
+  ctx.lineTo(sz*0.15,sz*0.6);
+  ctx.lineTo(-sz*0.7,sz*0.05);
+  ctx.closePath();ctx.fill();
+  // Shadow facet
+  ctx.fillStyle='#5c5038';
+  ctx.beginPath();
+  ctx.moveTo(-sz*0.7,sz*0.05);
+  ctx.lineTo(sz*0.15,sz*0.6);
+  ctx.lineTo(0,sz*0.95);
+  ctx.lineTo(-sz*0.9,sz*0.4);
+  ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+
 function drawGround(){
   const ext=18;
   if(selectedStage==='rooftop'){
@@ -3706,11 +3896,107 @@ function drawGround(){
       isoBox(vx+.1,vy+.1,.55,.7,.7,.12,'#4a4a55','#333338','#3a3a44');
     }
   } else {
-    // Grass field (original)
+    // Grass field — flat light-green tone + scattered tufts/pebbles
+    const tufts=[], rocks=[];
     for(let x=-ext;x<ext;x++)
-      for(let y=-ext;y<ext+6;y++)
-        isoBox(x,y,0,1,1,.055,(x+y)%2===0?C.gA:C.gB,C.gE,C.gE);
+      for(let y=-ext;y<ext+6;y++){
+        isoBox(x,y,0,1,1,.055,(x+y)%2===0?GRASS_A:GRASS_B,GRASS_E,GRASS_E);
+        const tuftN = grassPatchNoise(x*2.3+100, y*3.1+50);
+        if(tuftN>0.94) tufts.push([x,y,x*12.9+y*7.3]);
+        const rockN = grassPatchNoise(x*3.7-60, y*1.9+200);
+        if(rockN>0.95) rocks.push([x,y,x*8.3+y*11.1]);
+      }
+    for(const[tx,ty,seed]of tufts) drawGrassTuft(tx,ty,seed);
+    for(const[rx,ry,seed]of rocks) drawRock(rx,ry,seed);
+    // Soil border — a raised dirt lip around the true edge of the field
+    const soilT='#3a2814', soilAlt='#332211', soilL='#241809', soilR='#2c1e0c';
+    for(let x=-ext;x<ext;x++){
+      isoBox(x,-ext,0,1,1,.12,(x%2===0)?soilT:soilAlt,soilL,soilR);
+      isoBox(x,ext+5,0,1,1,.12,(x%2===0)?soilT:soilAlt,soilL,soilR);
+    }
+    for(let y=-ext;y<ext+6;y++){
+      isoBox(-ext,y,0,1,1,.12,(y%2===0)?soilT:soilAlt,soilL,soilR);
+      isoBox(ext-1,y,0,1,1,.12,(y%2===0)?soilT:soilAlt,soilL,soilR);
+    }
   }
+}
+
+// Two big pine trees flanking the field, left and right, only shown on
+// the grass stage. Positions solved for the iso projection so the
+// trees never overlap panels or props at any level, with wide margin.
+const TREES = [
+  { gx:-17, gy:21,  scale:1.15, jitter:0.0 }, // left tip
+  { gx: 15, gy:-16, scale:1.20, jitter:2.6 }, // right tip
+];
+
+// Isometric sprite/tile style pine — a tall trunk with nested triangular
+// boughs (wide at the base, narrowing to a point), drawn directly in
+// screen-pixel space off a single ground anchor rather than as
+// grid-projected ellipses.
+function drawTreeBough(cx, topY, bottomY, width, fill, edge){
+  // Each bough is a triangle with a shallow "M" droop along the bottom
+  // edge (branch tips sag between the trunk and the outer point),
+  // instead of a flat base — that droop is what sells "pine branches"
+  // rather than a plain triangle/cone.
+  const droop=(bottomY-topY)*0.14;
+  ctx.beginPath();
+  ctx.moveTo(cx, topY);
+  ctx.lineTo(cx+width/2, bottomY-droop*1.5);
+  ctx.lineTo(cx+width/4, bottomY-droop*0.5);
+  ctx.lineTo(cx, bottomY);
+  ctx.lineTo(cx-width/4, bottomY-droop*0.5);
+  ctx.lineTo(cx-width/2, bottomY-droop*1.5);
+  ctx.closePath();
+  ctx.fillStyle=fill;ctx.fill();
+  ctx.strokeStyle=edge;ctx.lineWidth=2;ctx.stroke();
+}
+
+function drawTree(t){
+  const {gx,gy,scale,jitter}=t;
+  const cx=gx+0.5, cy=gy+0.5;
+  const s=iso(cx,cy,0); // single ground anchor in screen space
+
+  // Ground shadow
+  ctx.save();
+  ctx.globalAlpha=.28;ctx.fillStyle='#000';
+  ctx.beginPath();ctx.ellipse(s.x+jitter*0.3,s.y+4,55*scale,18*scale,0,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+  ctx.restore();
+
+  const trunkW=16*scale, trunkH=60*scale;
+  // Trunk — flat two-tone shading (lit / shadowed side) like the rest
+  // of the scene's isoBox objects
+  ctx.fillStyle='#6a4326';
+  ctx.fillRect(s.x-trunkW/2, s.y-trunkH, trunkW, trunkH);
+  ctx.fillStyle='#4f3018';
+  ctx.fillRect(s.x-trunkW/2, s.y-trunkH, trunkW*0.42, trunkH);
+
+  // Boughs — 5 nested tiers, each overlapping ~40% into the one below
+  // so the silhouette reads as continuous foliage, wide at the bottom
+  // and narrowing to a point at top.
+  const boughs=[
+    { w:150, h:130 },
+    { w:120, h:112 },
+    { w:92,  h:96  },
+    { w:66,  h:78  },
+    { w:40,  h:56  },
+  ];
+  let bottomY = s.y - trunkH + 12*scale;
+  for(let i=0;i<boughs.length;i++){
+    const w=boughs[i].w*scale, h=boughs[i].h*scale;
+    const topY = bottomY - h;
+    const fill = i%2===0 ? '#2f7a34' : '#38903e';
+    drawTreeBough(s.x, topY, bottomY, w, fill, '#1c4a1f');
+    bottomY = topY + h*0.4; // next tier nests 40% into this one
+  }
+  // Treetop spike
+  ctx.fillStyle='#2f7a34';
+  ctx.strokeStyle='#1c4a1f';ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(s.x, bottomY-22*scale);
+  ctx.lineTo(s.x-7*scale, bottomY+4*scale);
+  ctx.lineTo(s.x+7*scale, bottomY+4*scale);
+  ctx.closePath();ctx.fill();ctx.stroke();
 }
 
 function drawTank(){
@@ -5047,6 +5333,11 @@ function drawSpeechBubble(){
 
 function renderScene(){
   const objs=[];
+  if(selectedStage==='grass'){
+    for(const t of TREES){
+      objs.push({d:t.gx+t.gy,fn:()=>drawTree(t)});
+    }
+  }
   for(const p of panels){
     const _pIntro=p.introOffset||0;
     objs.push({d:p.gx+p.gy+(p.gz+_pIntro)*0.5,fn:()=>drawPanel(p)});
@@ -5193,6 +5484,7 @@ function loop(now){
   if(stdist<2.5&&saltLevel<1){const _sp=saltLevel;saltLevel=Math.min(1,saltLevel+dt*.55);if(Math.floor(_sp*20)!==Math.floor(saltLevel*20))updateHUD();}
   // ── Warnings ────────────────────────────────────────────────
   const noWater=waterLevel<=0, noSalt=saltLevel<=0&&autoSystemBought&&sprinklers.length>0;
+  if(noWater||noSalt) neverRanDryThisLevel=false;
   // Only update DOM when state changes - prevents 60fps DOM thrashing
   const _warnState = (noWater?1:0)|(noSalt?2:0);
   if(_warnState !== _lastWarnState){
@@ -5535,7 +5827,7 @@ document.addEventListener('touchstart', function(){}, {passive:true});
 
     <div id="shareCopiedMsg" style="display:none;text-align:center;color:#44ddff;font-size:12px;margin:-2px 0 10px;letter-spacing:1px;">Link copied!</div>
 
-    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.8.4</span></div>
+    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.8.7</span></div>
 
     <button onclick="closeSettings()" style="display:block;margin:0 auto;padding:12px 40px;font-size:14px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#1a3a6a,#2255aa);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#fff;cursor:pointer;font-family:inherit;">🏠 Home</button>
   </div>
