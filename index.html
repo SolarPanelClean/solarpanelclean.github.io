@@ -5917,20 +5917,62 @@ document.addEventListener('touchend', function(ev){
 // ── Soft keyboard workaround ────────────────────────────────────
 // Some Android WebView wrappers (e.g. Kodular's WebViewer) don't reliably
 // resize/pan the page when the on-screen keyboard opens, so a focused
-// input can end up hidden behind the keyboard. Manually scroll it into
-// view whenever it gets focus, and again if the keyboard resizes the
-// visible viewport after the fact.
+// input can end up hidden behind the keyboard.
+//
+// scrollIntoView() alone does NOT help here: every full-screen modal in
+// this game (#overlay, #settingsOverlay, #tutorialOverlay) uses
+// position:fixed, and fixed elements are anchored to the viewport, not
+// the page's scroll flow — scrolling the page has zero visual effect on
+// them. That's why this previously failed silently, most noticeably with
+// Samsung's split keyboard (which shrinks the visible viewport a lot and
+// docks at screen edges rather than just the bottom).
+//
+// Fix: when an input inside one of these fixed containers is focused,
+// measure how much the keyboard has shrunk the visible viewport
+// (visualViewport) and nudge the fixed container itself up by just
+// enough to keep the focused input clear of the keyboard.
+function shiftForKeyboard(inputEl){
+  if(!window.visualViewport) { inputEl.scrollIntoView({block:'center', behavior:'smooth'}); return; }
+  var el = inputEl, fixedAncestor = null;
+  while(el && el !== document.body){
+    if(getComputedStyle(el).position === 'fixed'){ fixedAncestor = el; break; }
+    el = el.parentElement;
+  }
+  if(!fixedAncestor){ inputEl.scrollIntoView({block:'center', behavior:'smooth'}); return; }
+  var kbHeight = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+  if(kbHeight > 80){ // a real keyboard is showing, not just a rounding blip
+    var rect = inputEl.getBoundingClientRect();
+    var overlap = rect.bottom - (window.visualViewport.height - 12);
+    var shift = Math.max(0, overlap);
+    fixedAncestor.style.transition = 'transform 0.2s ease';
+    fixedAncestor.style.transform = shift>0 ? 'translateY(-'+shift+'px)' : '';
+  } else {
+    fixedAncestor.style.transform = '';
+  }
+}
+function unshiftFixedOverlays(){
+  ['overlay','settingsOverlay','tutorialOverlay'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.transform = '';
+  });
+}
 document.addEventListener('focusin', function(ev){
   var t = ev.target;
   if(t && (t.tagName==='INPUT' || t.tagName==='TEXTAREA')){
-    setTimeout(function(){ t.scrollIntoView({block:'center', behavior:'smooth'}); }, 300);
+    setTimeout(function(){ shiftForKeyboard(t); }, 300);
+  }
+});
+document.addEventListener('focusout', function(ev){
+  var t = ev.target;
+  if(t && (t.tagName==='INPUT' || t.tagName==='TEXTAREA')){
+    setTimeout(unshiftFixedOverlays, 50);
   }
 });
 if(window.visualViewport){
   window.visualViewport.addEventListener('resize', function(){
     var a = document.activeElement;
     if(a && (a.tagName==='INPUT' || a.tagName==='TEXTAREA')){
-      setTimeout(function(){ a.scrollIntoView({block:'center', behavior:'smooth'}); }, 50);
+      setTimeout(function(){ shiftForKeyboard(a); }, 50);
     }
   });
 }
