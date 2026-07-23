@@ -44,7 +44,8 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 /* ── HUD ── */
 #ui { position:fixed; top:calc(10px + env(safe-area-inset-top, 0px)); left:calc(10px + env(safe-area-inset-left, 0px));
   display:flex; justify-content:flex-start; align-items:flex-start;
-  pointer-events:none; z-index:10; gap:8px; flex-wrap:nowrap; }
+  pointer-events:none; z-index:10; gap:8px; flex-wrap:nowrap;
+  transition: opacity 0.18s ease; }
 .box { background:rgba(6,14,32,0.93); border:1px solid rgba(70,170,255,0.3);
   border-radius:8px; padding:5px 8px; backdrop-filter:blur(8px); min-width:60px; }
 .lbl { font-size:8px; letter-spacing:1.5px; color:#5ab4ff; text-transform:uppercase; margin-bottom:1px; }
@@ -99,7 +100,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 #pauseScreen p { font-size:12px; color:#88aacc; letter-spacing:2px; }
 
 /* ── Overlay ── */
-#overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(3,7,20,0.97);
+#overlay { position:fixed; top:0; left:0; width:100%; height:100%; height:100dvh; background:rgba(3,7,20,0.97);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   z-index:1000; gap:10px; overflow-y:auto; -webkit-overflow-scrolling:touch;
   padding:16px; box-sizing:border-box; }
@@ -307,7 +308,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
       </div>
       <div style="font-size:9px;color:#dddddd;
         text-shadow:0 0 6px rgba(0,0,0,1),1px 1px 2px rgba(0,0,0,1);">
-        Version 4.8.8
+        Version 4.10.2
       </div>
     </div>
   </div>
@@ -361,34 +362,34 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 <div id="ui">
 
   <!-- Score -->
-  <div style="background:rgba(6,14,32,0.88);border:1px solid rgba(70,170,255,0.35);border-radius:10px;padding:6px 12px;min-width:100px;flex-shrink:0;">
+  <div style="background:rgba(6,14,32,0.97);border:2px solid rgba(70,170,255,0.6);border-radius:10px;padding:6px 12px;min-width:100px;flex-shrink:0;">
     <div style="font-size:8px;letter-spacing:2px;color:#5ab4ff;text-transform:uppercase;">Score</div>
     <div style="font-size:18px;font-weight:bold;color:#fff;" id="score">0</div>
     <div style="font-size:9px;color:#99bbcc;margin-top:2px;" id="levelsub">Lv1 · 0/25,000</div>
   </div>
 
   <!-- Timer -->
-  <div id="timerbox-mobile" style="background:rgba(6,14,32,0.88);border:1px solid rgba(255,80,50,0.45);border-radius:10px;padding:6px 10px;text-align:center;min-width:52px;flex-shrink:0;">
+  <div id="timerbox-mobile" style="background:rgba(6,14,32,0.97);border:2px solid rgba(255,80,50,0.65);border-radius:10px;padding:6px 10px;text-align:center;min-width:52px;flex-shrink:0;">
     <div style="font-size:8px;letter-spacing:2px;color:#ff7755;text-transform:uppercase;">⏱</div>
     <div style="font-size:16px;font-weight:bold;color:#fff;" id="timerval-mobile">2:00</div>
   </div>
 
   <!-- Water -->
-  <div style="background:rgba(6,14,32,0.88);border:1px solid rgba(70,170,255,0.35);border-radius:10px;padding:6px 10px;text-align:center;flex-shrink:0;">
+  <div style="background:rgba(6,14,32,0.97);border:2px solid rgba(70,170,255,0.6);border-radius:10px;padding:6px 10px;text-align:center;flex-shrink:0;">
     <div style="font-size:8px;letter-spacing:2px;color:#5ab4ff;text-transform:uppercase;">💧 Water</div>
-    <div id="wbar" style="width:70px;height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
+    <div id="wbar" style="width:70px;height:7px;background:rgba(255,255,255,0.15);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
       <div id="wfill" style="height:100%;width:100%;background:linear-gradient(90deg,#2299ff,#44ddff);border-radius:3px;transition:width .12s;"></div>
     </div>
-    <div style="font-size:9px;color:#44ddff;" id="wpct">100%</div>
+    <div style="font-size:9px;color:#44ddff;font-weight:bold;" id="wpct">100%</div>
   </div>
 
   <!-- Salt — same 8px gap, shown when Auto-Clean purchased -->
-  <div id="saltbox" style="display:none;background:rgba(6,14,32,0.88);border:1px solid rgba(200,220,255,0.35);border-radius:10px;padding:6px 10px;text-align:center;flex-shrink:0;z-index:10;">
+  <div id="saltbox" style="display:none;background:rgba(6,14,32,0.97);border:2px solid rgba(200,220,255,0.6);border-radius:10px;padding:6px 10px;text-align:center;flex-shrink:0;z-index:10;">
     <div style="font-size:8px;letter-spacing:2px;color:#aabbdd;text-transform:uppercase;">🧂 Salt</div>
-    <div id="sbar" style="width:70px;height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
+    <div id="sbar" style="width:70px;height:7px;background:rgba(255,255,255,0.15);border-radius:3px;margin:4px auto 2px;overflow:hidden;">
       <div id="sfill" style="height:100%;width:100%;background:linear-gradient(90deg,#aaccff,#ddeeff);border-radius:3px;transition:width .12s;"></div>
     </div>
-    <div style="font-size:9px;color:#ccddf0;" id="spct">100%</div>
+    <div style="font-size:9px;color:#ccddf0;font-weight:bold;" id="spct">100%</div>
   </div>
 
   <!-- Hidden elements kept for JS compatibility -->
@@ -527,7 +528,7 @@ canvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; 
 </div>
 
   <button class="btn" id="startBtn" type="button"
-    onclick="startGame()"
+    data-action="start-game"
     style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;">▶ Start Cleaning</button>
   <div style="display:flex;gap:10px;margin-top:6px;justify-content:center;flex-wrap:wrap;">
     <button type="button" onclick="openTutorial()"
@@ -834,23 +835,106 @@ function selectStage(s){
 const cv=document.getElementById('c');
 const ctx=cv.getContext('2d');
 let W,H;
+// ── Ground hero texture ──────────────────────────────────────────
+// A full-frame photo per stage (already opaque edge-to-edge, no
+// background to remove), stretched via an affine transform to cover the
+// ENTIRE ground area — same x:-18..18 / y:-18..24 extent the procedural
+// ground grid covers for both stages. Procedural ground only ever shows
+// before the relevant image finishes loading.
+const groundHeroImg = new Image();
+let groundHeroReady = false;
+groundHeroImg.onload = () => { groundHeroReady = true; };
+groundHeroImg.onerror = () => { groundHeroReady = false; };
+groundHeroImg.src = './ground_hero.jpg';
+
+const rooftopHeroImg = new Image();
+let rooftopHeroReady = false;
+rooftopHeroImg.onload = () => { rooftopHeroReady = true; };
+rooftopHeroImg.onerror = () => { rooftopHeroReady = false; };
+rooftopHeroImg.src = './rooftop_hero.jpg';
+
+const GROUND_HERO_SPAN_X = 36, GROUND_HERO_SPAN_Y = 42; // grid units — matches drawGround()'s full x:-18..18, y:-18..24 extent
+const GROUND_HERO_CX = 0, GROUND_HERO_CY = 3; // grid-space center (midpoint of that same extent)
+function _drawStretchedHero(img){
+  const iw = img.naturalWidth, ih = img.naturalHeight;
+  if(!iw || !ih) return;
+  const a = iso(GROUND_HERO_CX - GROUND_HERO_SPAN_X/2, GROUND_HERO_CY - GROUND_HERO_SPAN_Y/2, 0);
+  const b = iso(GROUND_HERO_CX + GROUND_HERO_SPAN_X/2, GROUND_HERO_CY - GROUND_HERO_SPAN_Y/2, 0);
+  const d = iso(GROUND_HERO_CX - GROUND_HERO_SPAN_X/2, GROUND_HERO_CY + GROUND_HERO_SPAN_Y/2, 0);
+  ctx.save();
+  // ctx.transform() COMPOSES with the existing dpr scale set in resize()
+  // — using setTransform() here would wipe that out and break high-DPI
+  // rendering, so this must stay transform(), not setTransform().
+  ctx.transform(
+    (b.x-a.x)/iw, (b.y-a.y)/iw,
+    (d.x-a.x)/ih, (d.y-a.y)/ih,
+    a.x, a.y
+  );
+  ctx.drawImage(img, 0, 0);
+  ctx.restore();
+}
+function drawGroundHero(){
+  if(selectedStage==='grass' && groundHeroReady) _drawStretchedHero(groundHeroImg);
+  else if(selectedStage==='rooftop' && rooftopHeroReady) _drawStretchedHero(rooftopHeroImg);
+}
 // Sky gradient cache — declared here so resize() can invalidate it
 let _skyGradCache = null, _skyGradW = 0, _skyGradH = 0;
+// The #ui HUD sits fixed at the top-left. hudRect tracks its real
+// on-screen box so draw calls can check whether a panel, the storm/rain
+// effects, the salt tank, or the auto-system unit render underneath it —
+// when they do, the HUD fades to 25% so the player can still see what's
+// going on there instead of it being fully hidden behind opaque boxes.
+let hudRect = null;
+function updateHudBottomLimit(){
+  const uiEl = document.getElementById('ui');
+  if(uiEl){
+    const r = uiEl.getBoundingClientRect();
+    hudRect = r.bottom > 0 ? {left:r.left-6, right:r.right+6, bottom:r.bottom+6} : null;
+  }
+}
+// Set true by markHudOverlap() during a frame's draw calls, read/reset
+// once per frame around the main draw sequence below.
+let _hudOverlapFrame = false;
+function markHudOverlap(sx, sy, halfW, halfH){
+  if(!hudRect) return;
+  if(sx+halfW>hudRect.left && sx-halfW<hudRect.right && sy-halfH<hudRect.bottom){
+    _hudOverlapFrame = true;
+  }
+}
+let _hudFaded = false;
+function applyHudFade(){
+  if(_hudOverlapFrame === _hudFaded) return; // no change, skip the DOM write
+  _hudFaded = _hudOverlapFrame;
+  const uiEl = document.getElementById('ui');
+  if(uiEl) uiEl.style.opacity = _hudFaded ? '0.25' : '1';
+}
 function resize(){
   // Cap DPR at 2 — phones at DPR 3 render 9× the pixels for minimal visual gain
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  W = window.innerWidth;
-  H = window.innerHeight;
+  // Prefer visualViewport over window.innerWidth/innerHeight: on mobile
+  // Safari/Chrome, innerHeight can reflect the viewport size BEFORE the
+  // address bar collapses/expands, so it doesn't match what's actually
+  // visible right now. visualViewport tracks the true, current visible
+  // area, which is what fixes HUD elements (like the salt bar) ending
+  // up overlapping game content that assumed a taller/shorter screen.
+  const vv = window.visualViewport;
+  W = vv ? vv.width  : window.innerWidth;
+  H = vv ? vv.height : window.innerHeight;
   cv.width  = Math.round(W * dpr);
   cv.height = Math.round(H * dpr);
   cv.style.width  = W + 'px';
   cv.style.height = H + 'px';
   ctx.scale(dpr, dpr);
   _skyGradCache = null; // force gradient rebuild at new size
+  requestAnimationFrame(updateHudBottomLimit);
 }
 resize();
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', ()=>{ setTimeout(resize, 200); });
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', resize);
+  window.visualViewport.addEventListener('scroll', resize);
+}
 document.addEventListener('visibilitychange', ()=>{
   if(!document.hidden){
     // Reset lastT so dt doesn't spike after a long background pause
@@ -1104,7 +1188,6 @@ function getSfxCtx() {
   return sfxCtx;
 }
 
-
 // ── Weather ambient loops ───────────────────────────────────────
 // Continuous looping sounds tied to the rain shower / dust storm
 // lifecycle, started when each event spawns and faded out when it
@@ -1120,7 +1203,7 @@ function makeSfxNoiseBuffer(ac, seconds){
 
 function startRainSfx(){
   try{
-    const ac = getSfxCtx(); if(!ac || rainSfx) return;
+    const ac = getSfxCtx(); if(!ac || rainSfx) { console.log('[SFX] startRainSfx skipped - ac:', !!ac, 'already playing:', !!rainSfx); return; }
     const master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
     master.gain.linearRampToValueAtTime(SFX_VOLUME*0.5, ac.currentTime+0.8);
     const buf = makeSfxNoiseBuffer(ac, 2);
@@ -1143,6 +1226,7 @@ function startRainSfx(){
       dsrc.start(t); dsrc.stop(t+0.06);
     }, 180);
     rainSfx = { master, src, dropletTimer };
+    console.log('[SFX] Rain sound started successfully');
   }catch(e){
     console.error('[SFX] startRainSfx FAILED:', e);
   }
@@ -1162,7 +1246,7 @@ function stopRainSfx(){
 
 function startStormSfx(){
   try{
-    const ac = getSfxCtx(); if(!ac || stormSfx) return;
+    const ac = getSfxCtx(); if(!ac || stormSfx) { console.log('[SFX] startStormSfx skipped - ac:', !!ac, 'already playing:', !!stormSfx); return; }
     const master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
     master.gain.linearRampToValueAtTime(SFX_VOLUME*0.9, ac.currentTime+1.0);
     const buf = makeSfxNoiseBuffer(ac, 3);
@@ -1182,6 +1266,7 @@ function startStormSfx(){
       g.gain.setTargetAtTime(0.16 + wave*0.09, t, 0.6);
     }, 150);
     stormSfx = { master, src, swellTimer };
+    console.log('[SFX] Storm sound started successfully');
   }catch(e){
     console.error('[SFX] startStormSfx FAILED:', e);
   }
@@ -1198,6 +1283,7 @@ function stopStormSfx(){
   }
   stormSfx = null;
 }
+
 
 // ── Clean Sound Variants ──────────────────────────────────────
 // 1 = Squeegee (wet squeak)   2 = Pop (bubble pop)
@@ -1610,6 +1696,9 @@ function toggleMusic(){
 
 // ── Upgrades ──────────────────────────────────────────────────
 let bigMopBought=false;
+// Bridge for the 3D character module (module scripts can't see classic-script
+// `let` variables directly) — a closure always reflects the current value.
+window.__getBigMopBought = function(){ return bigMopBought; };
 const BIG_MOP_COST=25000;
 let extraTankBought=false;
 const EXTRA_TANK_COST=100000;
@@ -1618,7 +1707,7 @@ const EXTRA_TANK_COST=100000;
 const COSMETIC_COST=10000;
 const HAT_COLORS={
   default:{label:'Default Yellow', T:'#ddcc22',L:'#aa9910',R:'#c4b018'},
-  tiger:  {label:'Tiger',          T:'#d96010',L:'#8a2a00',R:'#b84808'},
+  leopard:{label:'Leopard',        T:'#d2a55e',L:'#8a6a34',R:'#b08a48'},
   blue:   {label:'Blue',           T:'#1188cc',L:'#0a5588',R:'#0d77aa'},
   green:  {label:'Green',          T:'#22aa44',L:'#117722',R:'#1a8833'},
   purple: {label:'Purple',         T:'#882299',L:'#551166',R:'#771188'},
@@ -1626,7 +1715,7 @@ const HAT_COLORS={
 };
 const SHIRT_COLORS={
   default:{label:'Default Blue', T:'#2255aa',L:'#14397a',R:'#1c4490'},
-  tiger:  {label:'Tiger',         T:'#1a0e00',L:'#0a0500',R:'#140900'},
+  leopard:{label:'Leopard',      T:'#d2a55e',L:'#8a6a34',R:'#b08a48'},
   blue:   {label:'Light Blue',   T:'#1188cc',L:'#0a5588',R:'#0d77aa'},
   green:  {label:'Green',        T:'#228844',L:'#145522',R:'#1a6633'},
   purple: {label:'Purple',       T:'#773399',L:'#441166',R:'#662288'},
@@ -1634,7 +1723,7 @@ const SHIRT_COLORS={
 };
 const PANTS_COLORS={
   default:{label:'Default Blue', T:'#2255aa',L:'#14397a',R:'#1c4490'},
-  tiger:  {label:'Tiger',        T:'#1a0e00',L:'#0a0500',R:'#140900'},
+  leopard:{label:'Leopard',      T:'#d2a55e',L:'#8a6a34',R:'#b08a48'},
   blue:   {label:'Blue',         T:'#1188cc',L:'#0a5588',R:'#0d77aa'},
   green:  {label:'Green',        T:'#228844',L:'#145522',R:'#1a6633'},
   purple: {label:'Purple',       T:'#773399',L:'#441166',R:'#662288'},
@@ -1642,14 +1731,14 @@ const PANTS_COLORS={
 };
 const VEST_COLORS={
   default:{label:'Default Orange', T:'#ff8800',L:'#cc5500',R:'#e06600'},
-  tiger:  {label:'Tiger',           T:'#c85000',L:'#7a2000',R:'#a84000'},
+  leopard:{label:'Leopard',         T:'#d2a55e',L:'#8a6a34',R:'#b08a48'},
   blue:   {label:'Blue',           T:'#1188cc',L:'#0a5588',R:'#0d77aa'},
   green:  {label:'Green',          T:'#22aa44',L:'#117722',R:'#1a8833'},
   purple: {label:'Purple',         T:'#882299',L:'#551166',R:'#771188'},
   red:    {label:'Red',            T:'#cc2222',L:'#991111',R:'#bb1a1a'},
 };
 let equippedHat='default';
-let tigerUniformBought=false;
+let leopardUniformBought=false;
 let equippedShirt='default';
 let equippedPants='default';
 let boughtHats=new Set(['default']);
@@ -1657,6 +1746,17 @@ let boughtShirts=new Set(['default']);
 let boughtPants=new Set(['default']);
 let equippedVest='default';
 let boughtVests=new Set(['default']);
+let equippedMopColor='default';
+let boughtMopColors=new Set(['default']);
+// Bridge for the 3D character module — exposes current cosmetic
+// selections. Uses a getter (polled by the module) rather than hooking
+// every individual equip/purchase call site, since there are many of
+// them (buyHat/equipHat, buyShirt/equipShirt, save-data restore, leopard
+// set unlocks, etc.) and a poll is far less error-prone than trying to
+// catch every one.
+window.__getCosmetics = function(){
+  return { hat: equippedHat, shirt: equippedShirt, vest: equippedVest, pants: equippedPants, mop: equippedMopColor };
+};
 let extraTimeBought1=false,extraTimeBought2=false,extraTimeBought3=false,extraTimeBought4=false;
 
 // ── Level intro speech bubble ─────────────────────────────────
@@ -1783,6 +1883,7 @@ function buildPanels(){
           leaf: false,  leafOx:(Math.random()-.5)*.5, leafOy:(Math.random()-.5)*.3,
           highlight: false,
           dirtCount: 0, destroyed: false,
+          row: bi*ROWS + r, // unique per (block,row) — used for the 3-broken-rows game-over check
         });
         remaining--;
       }
@@ -1794,7 +1895,7 @@ function buildPanels(){
 // Each panel occupies grid rect [gx, gx+1.8] × [gy, gy+1.0]
 // Player is a point — we check if proposed position overlaps any panel
 function panelBlocks(ngx,ngy){
-  const PR=0.38; // player radius — smaller = easier navigation
+  const PR=0.41; // player radius — modest increase for the bigger 3D character (was 0.38); 0.47 was tried but caused stuttery blocked movement near tightly-packed panels
   for(const p of panels){
     const minX=p.gx+0.18,maxX=p.gx+1.62;
     const minY=p.gy+0.18, maxY=p.gy+0.82;  // shrunken collision — leaves room to walk between rows
@@ -2013,7 +2114,7 @@ function tryClean(){
     // Big mop gives 5% score bonus
     if(bigMopBought) pts=Math.round(pts*1.05);
     const col=pts>=1250?'#ff9944':pts>=1000?'#44ff88':'#fff';
-    if(equippedHat==='tiger')pts=Math.round(pts*1.1);
+    if(equippedHat==='leopard')pts=Math.round(pts*1.25);
     score+=pts;addPopup(s.x,s.y-20,'+'+pts,col);
     if(pts>0){
       spawnCleanSparkles(s.x,s.y); hapticClean();
@@ -2100,8 +2201,10 @@ function buildBonusPanels(){
 
 function checkSecretBonus(){
   // Requires: all 4 green items EQUIPPED (not just bought) AND played level in full green
+  // (was 5 items - "shirt" as a separate sleeve-color purchase was removed, "vest" is now
+  // labeled "shirt" in the UI and covers this slot instead)
   const allGreenOn = (equippedHat==='green' && equippedVest==='green' &&
-                      equippedShirt==='green' && equippedPants==='green');
+                      equippedPants==='green' && equippedMopColor==='green');
   if(allGreenOn && _playedFullGreen){
     _secretBonusUnlocked=true;
   }
@@ -2329,13 +2432,13 @@ function openBank(){
   if(bigMopBought){
     shopHTML+=`<div class="retro-item" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:10px;border-color:#00ff88;">
       <div style="font-size:28px">🧹</div>
-      <div style="flex:1"><div class="retro-item-name" style="color:#44ffbb;text-shadow:0 2px 0 #008844">Pro Big Mop</div><div class="retro-installed">✓ INSTALLED — 2× faster · +5% score</div></div>
+      <div style="flex:1"><div class="retro-item-name" style="color:#44ffbb;text-shadow:0 2px 0 #008844">Professional Mop</div><div class="retro-installed">✓ INSTALLED — 2× faster · +5% score</div></div>
     </div>`;
   } else if(currentLevel>=2){
     const canBuy=bankTotal>=BIG_MOP_COST;
     shopHTML+=`<div class="retro-item" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:10px;border-color:#ffaa44;">
       <div style="font-size:28px">🧹</div>
-      <div style="flex:1"><div class="retro-item-name" style="color:#ffee55;text-shadow:0 2px 0 #cc6600">Pro Big Mop</div>
+      <div style="flex:1"><div class="retro-item-name" style="color:#ffee55;text-shadow:0 2px 0 #cc6600">Professional Mop</div>
         <div style="color:#88aacc;font-size:11px">Upgrade mop! 2× faster. Wider head + <b style="color:#ffcc44">+5% score bonus</b>, per clean.</div>
         <div style="color:#ffaa44;font-size:11px;margin-top:3px">Cost: ${BIG_MOP_COST.toLocaleString()} pts (one time)</div></div>
       <button onclick="buyBigMop()" ${canBuy?'':'disabled'}
@@ -2344,7 +2447,7 @@ function openBank(){
     </div>`;
   } else {
     shopHTML+=`<div style="padding:12px 16px;background:rgba(20,40,60,0.6);border:2px dashed rgba(80,120,160,0.5);border-radius:14px;margin-bottom:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#6699bb">
-      🔒 Pro Big Mop — unlocks Level 2</div>`;
+      🔒 Professional Mop — unlocks Level 2</div>`;
   }
 
   shopHTML+=`</div><div style="border-top:1px solid rgba(255,215,0,0.2);padding-top:16px;margin-bottom:16px">
@@ -2429,7 +2532,7 @@ function openBank(){
 
   // ─ Extra Time (unlocks after level 6, requires all main purchases) ─
   const allMainBought = bigMopBought && autoSystemBought && sprinklers.length>=10
-    && boughtHats.size>1 && boughtVests.size>1 && boughtShirts.size>1 && boughtPants.size>1;
+    && boughtHats.size>1 && boughtVests.size>1 && boughtPants.size>1;
   const EXTRA_TIME_COST = 20000;
   const canBuyET1 = currentLevel>=7 && allMainBought && bankTotal>=EXTRA_TIME_COST && !extraTimeBought1;
   const canBuyET2 = currentLevel>=8 && allMainBought && bankTotal>=EXTRA_TIME_COST && extraTimeBought1 && !extraTimeBought2;
@@ -2544,10 +2647,11 @@ function openBank(){
   const colorKeys=['blue','green','purple','red'];
   const colorNames={blue:'Blue',green:'Green',purple:'Purple',red:'Red'};
   const colorSwatches={
-    hat:  {blue:'#1188cc',green:'#22aa44',purple:'#882299',red:'#cc2222',tiger:'#ff8800'},
+    hat:  {blue:'#1188cc',green:'#22aa44',purple:'#882299',red:'#cc2222',leopard:'#d2a55e'},
     shirt:{blue:'#1188cc',green:'#228844',purple:'#773399',red:'#cc3322'},
     pants:{blue:'#1188cc',green:'#228844',purple:'#773399',red:'#cc3322'},
     vest: {blue:'#1188cc',green:'#22aa44',purple:'#882299',red:'#cc2222'},
+    mop:  {blue:'#1188cc',green:'#22aa44',purple:'#882299',red:'#cc2222'},
   };
 
   let cosHTML=`<div style="border-top:1px solid rgba(255,215,0,0.2);padding-top:16px;margin-bottom:16px">
@@ -2556,7 +2660,7 @@ function openBank(){
   // ─ Hats (unlocks after level 1 = level >= 2 in bank) ─
   if(currentLevel>=2){
     cosHTML+=`<div style="margin-bottom:14px">
-      <div style="color:#ffdd88;font-size:12px;font-weight:bold;margin-bottom:8px">🪖 Hard Hat <span style="color:#aaa;font-size:10px;font-weight:normal">(unlocks after Level 1)</span></div>
+      <div style="color:#ffdd88;font-size:12px;font-weight:bold;margin-bottom:8px">🪖 Safety Helmet <span style="color:#aaa;font-size:10px;font-weight:normal">(unlocks after Level 1)</span></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">`;
     for(const key of colorKeys){
       const owned=boughtHats.has(key);
@@ -2576,10 +2680,10 @@ function openBank(){
     cosHTML+=`<div style="padding:10px;background:rgba(20,15,40,0.6);border:2px dashed rgba(100,80,160,0.5);border-radius:14px;margin-bottom:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#8877cc">🔒 Hat colours — after Level 1</div>`;
   }
 
-  // ─ Vest (unlocks after level 2 = level >= 3) ─
+  // ─ Shirt (formerly "Vest" — unlocks after level 2 = level >= 3) ─
   if(currentLevel>=3){
     cosHTML+=`<div style="margin-bottom:14px">
-      <div style="color:#ffdd88;font-size:12px;font-weight:bold;margin-bottom:8px">🦺 Vest <span style="color:#aaa;font-size:10px;font-weight:normal">(unlocks after Level 2)</span></div>
+      <div style="color:#ffdd88;font-size:12px;font-weight:bold;margin-bottom:8px">👕 Shirt <span style="color:#aaa;font-size:10px;font-weight:normal">(unlocks after Level 2)</span></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">`;
     for(const key of colorKeys){
       const owned=boughtVests.has(key);
@@ -2596,36 +2700,13 @@ function openBank(){
     }
     cosHTML+=`</div></div>`;
   } else {
-    cosHTML+=`<div style="padding:10px;background:rgba(20,15,40,0.6);border:2px dashed rgba(100,80,160,0.5);border-radius:14px;margin-bottom:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#8877cc">🔒 Vest colours — after Level 2</div>`;
-  }
-
-  // ─ Shirts (unlocks after level 3 = level >= 4) ─
-  if(currentLevel>=4){
-    cosHTML+=`<div style="margin-bottom:14px">
-      <div style="color:#ffdd88;font-size:12px;font-weight:bold;margin-bottom:8px">👕 Shirt <span style="color:#aaa;font-size:10px;font-weight:normal">(unlocks after Level 4)</span></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">`;
-    for(const key of colorKeys){
-      const owned=boughtShirts.has(key);
-      const equipped=equippedShirt===key;
-      const canBuy=!owned&&bankTotal>=COSMETIC_COST;
-      const swatch=colorSwatches.shirt[key];
-      cosHTML+=`<div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-        <div style="width:28px;height:28px;border-radius:50%;background:${swatch};border:2px solid ${equipped?'#fff':'rgba(255,255,255,0.2)'}"></div>
-        <span style="font-size:9px;color:${owned?'#aaffaa':'#888'}">${colorNames[key]}</span>
-        ${equipped?`<span style="font-size:9px;color:#44ff88">✓ Equipped</span>`:
-          owned?`<button onclick="equipShirt('${key}')" style="padding:3px 8px;border:none;border-radius:4px;cursor:pointer;background:linear-gradient(135deg,#44ff88,#11aa44);color:#000;font-size:9px;font-family:inherit;font-weight:bold">Wear</button>`:
-          `<button onclick="buyShirt('${key}')" ${canBuy?'':'disabled'} style="padding:3px 8px;border:none;border-radius:4px;cursor:${canBuy?'pointer':'not-allowed'};background:${canBuy?'linear-gradient(135deg,#ffd700,#cc8800)':'rgba(80,80,80,0.5)'};color:${canBuy?'#000':'#555'};font-size:9px;font-family:inherit;font-weight:bold">10k</button>`}
-      </div>`;
-    }
-    cosHTML+=`</div></div>`;
-  } else {
-    cosHTML+=`<div style="padding:10px;background:rgba(20,15,40,0.6);border:2px dashed rgba(100,80,160,0.5);border-radius:14px;margin-bottom:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#8877cc">🔒 Shirt colours — after Level 3</div>`;
+    cosHTML+=`<div style="padding:10px;background:rgba(20,15,40,0.6);border:2px dashed rgba(100,80,160,0.5);border-radius:14px;margin-bottom:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#8877cc">🔒 Shirt colors — after Level 2</div>`;
   }
 
   // ─ Pants (unlocks after level 4 = level >= 5) ─
-  if(currentLevel>=5){
+  if(currentLevel>=4){
     cosHTML+=`<div style="margin-bottom:14px">
-      <div style="color:#ffdd88;font-size:12px;font-weight:bold;margin-bottom:8px">👖 Pants <span style="color:#aaa;font-size:10px;font-weight:normal">(unlocks after Level 4)</span></div>
+      <div style="color:#ffdd88;font-size:12px;font-weight:bold;margin-bottom:8px">👖 Pants <span style="color:#aaa;font-size:10px;font-weight:normal">(unlocks after Level 3)</span></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">`;
     for(const key of colorKeys){
       const owned=boughtPants.has(key);
@@ -2642,34 +2723,57 @@ function openBank(){
     }
     cosHTML+=`</div></div>`;
   } else {
-    cosHTML+=`<div style="padding:10px;background:rgba(20,15,40,0.6);border:2px dashed rgba(100,80,160,0.5);border-radius:14px;margin-bottom:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#8877cc">🔒 Pants colours — after Level 4</div>`;
+    cosHTML+=`<div style="padding:10px;background:rgba(20,15,40,0.6);border:2px dashed rgba(100,80,160,0.5);border-radius:14px;margin-bottom:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#8877cc">🔒 Pants colors — after Level 3</div>`;
+  }
+
+  // ─ Mop Color (unlocks after level 4 = level >= 5) ─
+  if(currentLevel>=5){
+    cosHTML+=`<div style="margin-bottom:14px">
+      <div style="color:#ffdd88;font-size:12px;font-weight:bold;margin-bottom:8px">🧹 Mop Colors <span style="color:#aaa;font-size:10px;font-weight:normal">(unlocks after Level 4)</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">`;
+    for(const key of colorKeys){
+      const owned=boughtMopColors.has(key);
+      const equipped=equippedMopColor===key;
+      const canBuy=!owned&&bankTotal>=COSMETIC_COST;
+      const swatch=colorSwatches.mop[key];
+      cosHTML+=`<div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="width:28px;height:28px;border-radius:50%;background:${swatch};border:2px solid ${equipped?'#fff':'rgba(255,255,255,0.2)'}"></div>
+        <span style="font-size:9px;color:${owned?'#aaffaa':'#888'}">${colorNames[key]}</span>
+        ${equipped?`<span style="font-size:9px;color:#44ff88">✓ Equipped</span>`:
+          owned?`<button onclick="equipMopColor('${key}')" style="padding:3px 8px;border:none;border-radius:4px;cursor:pointer;background:linear-gradient(135deg,#44ff88,#11aa44);color:#000;font-size:9px;font-family:inherit;font-weight:bold">Wear</button>`:
+          `<button onclick="buyMopColor('${key}')" ${canBuy?'':'disabled'} style="padding:3px 8px;border:none;border-radius:4px;cursor:${canBuy?'pointer':'not-allowed'};background:${canBuy?'linear-gradient(135deg,#ffd700,#cc8800)':'rgba(80,80,80,0.5)'};color:${canBuy?'#000':'#555'};font-size:9px;font-family:inherit;font-weight:bold">10k</button>`}
+      </div>`;
+    }
+    cosHTML+=`</div></div>`;
+  } else {
+    cosHTML+=`<div style="padding:10px;background:rgba(20,15,40,0.6);border:2px dashed rgba(100,80,160,0.5);border-radius:14px;margin-bottom:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#8877cc">🔒 Mop colors — after Level 4</div>`;
   }
 
 
   const allColorsOwned = ['blue','green','purple','red'].every(k =>
-    boughtHats.has(k) && boughtShirts.has(k) && boughtVests.has(k) && boughtPants.has(k)
+    boughtHats.has(k) && boughtVests.has(k) && boughtPants.has(k)
   );
   if (allColorsOwned) {
-    const tigerEquipped = equippedHat==='tiger'&&equippedShirt==='tiger'&&equippedVest==='tiger'&&equippedPants==='tiger';
-    cosHTML += `<div style="border-top:1px solid rgba(255,140,0,0.4);margin-top:16px;padding-top:14px;">
-      <div style="color:#ff8800;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🐯 Tiger Uniform</div>
-      ${tigerUniformBought
-        ? `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,140,0,0.08);border:1px solid rgba(255,140,0,0.4);border-radius:8px;cursor:pointer" onclick="equipTigerUniform()">
-            <div style="width:28px;height:28px;background:linear-gradient(135deg,#ff8800,#111);border-radius:4px;border:2px solid #ff8800;flex-shrink:0"></div>
-            <div style="flex:1"><div style="color:#ff8800;font-weight:bold;font-size:12px">Tiger Uniform 🐯</div>
-            <div style="color:#aaa;font-size:10px">Hat + Shirt + Vest + Pants</div></div>
-            <div style="font-size:11px;color:${tigerEquipped?'#44ff88':'#aaa'}">${tigerEquipped?'✓ Wearing':'Wear'}</div>
+    const leopardEquipped = equippedHat==='leopard'&&equippedVest==='leopard'&&equippedPants==='leopard';
+    cosHTML += `<div style="border-top:1px solid rgba(210,165,94,0.4);margin-top:16px;padding-top:14px;">
+      <div style="color:#d2a55e;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🐆 Leopard Uniform</div>
+      ${leopardUniformBought
+        ? `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(210,165,94,0.08);border:1px solid rgba(210,165,94,0.4);border-radius:8px;cursor:pointer" onclick="equipLeopardUniform()">
+            <div style="width:28px;height:28px;background:linear-gradient(135deg,#d2a55e,#2a1a0a);border-radius:4px;border:2px solid #d2a55e;flex-shrink:0"></div>
+            <div style="flex:1"><div style="color:#d2a55e;font-weight:bold;font-size:12px">Leopard Uniform 🐆</div>
+            <div style="color:#aaa;font-size:10px">Hat + Shirt + Pants — +25% speed, +25% clean pts</div></div>
+            <div style="font-size:11px;color:${leopardEquipped?'#44ff88':'#aaa'}">${leopardEquipped?'✓ Wearing':'Wear'}</div>
           </div>`
-        : `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,140,0,0.06);border:1px solid rgba(255,140,0,0.35);border-radius:8px">
-            <div style="width:28px;height:28px;background:linear-gradient(135deg,#ff8800,#111);border-radius:4px;border:2px solid rgba(255,140,0,0.5);flex-shrink:0"></div>
-            <div style="flex:1"><div style="color:#ff8800;font-weight:bold;font-size:12px">Tiger Uniform 🐯</div>
-            <div style="color:#aaa;font-size:10px">Price: ${TIGER_COST.toLocaleString()} pts — full outfit</div></div>
-            <button onclick="buyTigerUniform()" ${bankTotal>=TIGER_COST?'':'disabled'}
-              style="padding:7px 12px;border:none;border-radius:6px;cursor:${bankTotal>=TIGER_COST?'pointer':'not-allowed'};
+        : `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(210,165,94,0.06);border:1px solid rgba(210,165,94,0.35);border-radius:8px">
+            <div style="width:28px;height:28px;background:linear-gradient(135deg,#d2a55e,#2a1a0a);border-radius:4px;border:2px solid rgba(210,165,94,0.5);flex-shrink:0"></div>
+            <div style="flex:1"><div style="color:#d2a55e;font-weight:bold;font-size:12px">Leopard Uniform 🐆</div>
+            <div style="color:#aaa;font-size:10px">Price: ${LEOPARD_COST.toLocaleString()} pts — full outfit, +25% speed, +25% clean pts</div></div>
+            <button onclick="buyLeopardUniform()" ${bankTotal>=LEOPARD_COST?'':'disabled'}
+              style="padding:7px 12px;border:none;border-radius:6px;cursor:${bankTotal>=LEOPARD_COST?'pointer':'not-allowed'};
               font-size:11px;font-family:inherit;font-weight:bold;white-space:nowrap;
-              background:${bankTotal>=TIGER_COST?'linear-gradient(135deg,#ff8800,#cc4400)':'rgba(80,80,80,0.5)'};
-              color:${bankTotal>=TIGER_COST?'#fff':'#666'}">
-              ${bankTotal>=TIGER_COST?'Buy 🐯':'Not enough pts'}
+              background:${bankTotal>=LEOPARD_COST?'linear-gradient(135deg,#d2a55e,#8a6a34)':'rgba(80,80,80,0.5)'};
+              color:${bankTotal>=LEOPARD_COST?'#000':'#666'}">
+              ${bankTotal>=LEOPARD_COST?'Buy 🐆':'Not enough pts'}
             </button>
           </div>`
       }
@@ -2771,38 +2875,64 @@ function buySprinkler(){
 function buyHat(key){
   if(bankTotal<COSMETIC_COST||boughtHats.has(key))return;
   bankTotal-=COSMETIC_COST; boughtHats.add(key); equippedHat=key; sfxBuy();
+  console.log('===== [Bank] BOUGHT HAT: '+key+' =====');
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
   updateHUD(); openBank();
 }
 function equipHat(key){
   if(!boughtHats.has(key))return;
-  equippedHat=key; openBank();
+  equippedHat=key;
+  console.log('===== [Bank] EQUIPPED HAT: '+key+' =====');
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
+  openBank();
 }
 function buyShirt(key){
   if(bankTotal<COSMETIC_COST||boughtShirts.has(key))return;
   bankTotal-=COSMETIC_COST; boughtShirts.add(key); equippedShirt=key; sfxBuy();
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
   updateHUD(); openBank();
 }
 function equipShirt(key){
   if(!boughtShirts.has(key))return;
-  equippedShirt=key; openBank();
+  equippedShirt=key;
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
+  openBank();
 }
 function buyPants(key){
   if(bankTotal<COSMETIC_COST||boughtPants.has(key))return;
   bankTotal-=COSMETIC_COST; boughtPants.add(key); equippedPants=key; sfxBuy();
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
   updateHUD(); openBank();
 }
 function equipPants(key){
   if(!boughtPants.has(key))return;
-  equippedPants=key; openBank();
+  equippedPants=key;
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
+  openBank();
 }
 function buyVest(key){
   if(bankTotal<COSMETIC_COST||boughtVests.has(key))return;
   bankTotal-=COSMETIC_COST; boughtVests.add(key); equippedVest=key; sfxBuy();
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
   updateHUD(); openBank();
 }
 function equipVest(key){
   if(!boughtVests.has(key))return;
-  equippedVest=key; openBank();
+  equippedVest=key;
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
+  openBank();
+}
+function buyMopColor(key){
+  if(bankTotal<COSMETIC_COST||boughtMopColors.has(key))return;
+  bankTotal-=COSMETIC_COST; boughtMopColors.add(key); equippedMopColor=key; sfxBuy();
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
+  updateHUD(); openBank();
+}
+function equipMopColor(key){
+  if(!boughtMopColors.has(key))return;
+  equippedMopColor=key;
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
+  openBank();
 }
 function buyExtraTime1(){
   if(bankTotal<20000||extraTimeBought1)return;
@@ -2860,6 +2990,8 @@ function buyBigMop(){
   if(bigMopBought||bankTotal<BIG_MOP_COST)return;
   bankTotal-=BIG_MOP_COST; sfxBuy();
   bigMopBought=true;
+  console.log('[Bank] Big Mop purchased. window.__onBigMopPurchased exists:', !!window.__onBigMopPurchased);
+  if(window.__onBigMopPurchased) window.__onBigMopPurchased();
   showAlert('🧹 Big Pro Mop! Cleans 2× faster + 5% score bonus!');
   updateHUD();
   openBank();
@@ -2879,7 +3011,7 @@ function startLevel(){
   _voiceWaterPlayed=false; _voiceSaltPlayed=false; _lastWarnState=-1;
   if(window.speechSynthesis) window.speechSynthesis.cancel();
   // Check if player is wearing full green uniform
-  if(equippedHat==='green'&&equippedVest==='green'&&equippedShirt==='green'&&equippedPants==='green'){
+  if(equippedHat==='green'&&equippedVest==='green'&&equippedPants==='green'&&equippedMopColor==='green'){
     _playedFullGreen=true;
   }
   document.getElementById('overlay').style.display='none';
@@ -2931,6 +3063,37 @@ function startLevel(){
 }
 
 // ── Dust Storm ────────────────────────────────────────────────
+// Storm leaf burst — when a storm hits, the wind shakes a batch of
+// leaves off the corner trees onto random panels. Count scales with
+// level size: roughly 20-35% of eligible panels, so a 12-panel level 1
+// sees ~3-4 leaves and a 40+-panel level 4 sees ~10-14. Each leaf lands
+// on a DISTINCT panel (shuffle-and-take, no repeats) — per design
+// decision, storm leaves never stack onto the same panel in one burst,
+// so a storm can't instantly destroy a panel via the 3-hit neglect rule.
+function spawnStormLeafBurst(){
+  const eligible = panels.filter(p=>!p.destroyed && !p.leaf);
+  if(eligible.length===0) return;
+  const pct = 0.2 + Math.random()*0.15;
+  let leafCount = Math.max(2, Math.round(eligible.length*pct));
+  leafCount = Math.min(leafCount, eligible.length);
+
+  const shuffled = [...eligible].sort(()=>Math.random()-0.5);
+  for(let i=0;i<leafCount;i++){
+    const p = shuffled[i];
+    p.leaf = true; leafTotal++;
+    p.dirtCount = (p.dirtCount||0) + 1;
+    if(p.dirtCount >= 3 && !p.destroyed){
+      p.destroyed = true;
+      showAlert('💥 Panel destroyed by neglect! Too many leaves!');
+      checkDestroyedRowsGameOver();
+    }
+    const s=iso(p.gx+.9,p.gy+.4,p.gz+1.5);
+    particles.push({x:s.x,y:s.y-60,vx:(Math.random()-.5)*2,vy:3,life:1.2,col:C.leafP,r:7});
+  }
+  showAlert('🍂 The storm shook '+leafCount+' leaves onto the panels!');
+  updateHUD();
+}
+
 function spawnDustStorm(){
   // Pick a random edge to enter from
   const side=Math.floor(Math.random()*4);
@@ -2958,6 +3121,7 @@ function spawnDustStorm(){
     dustStorm.particles.push({a,r,speed:0.8+Math.random()*1.4,size:8+Math.random()*22,opacity:0.35+Math.random()*0.5});
   }
   showAlert('🌪️ Dust storm incoming! Protect your panels!');
+  spawnStormLeafBurst();
   startStormSfx();
 }
 
@@ -3000,6 +3164,7 @@ function drawDustStorm(){
   const psc=iso(ds.gx,ds.gy+ds.radius,0.5);
   const radiusPx=Math.abs(sc.y-psc.y)*1.4;
   const towerH=radiusPx*3.8;
+  markHudOverlap(sc.x, sc.y-towerH*0.5, radiusPx*1.2, towerH*0.5);
   ctx.save();
   ctx.translate(sc.x,sc.y);
 
@@ -3205,6 +3370,7 @@ function drawRainCloud(){
   const sc=iso(rc.gx,rc.gy,0.5);
   const psc=iso(rc.gx,rc.gy+rc.radius,0.5);
   const radiusPx=Math.abs(sc.y-psc.y)*1.4;
+  markHudOverlap(sc.x, sc.y-radiusPx*1.6, radiusPx*1.3, radiusPx*1.3);
   ctx.save();
   ctx.translate(sc.x,sc.y-radiusPx*1.6);
 
@@ -3402,10 +3568,11 @@ function updateBirds(dt){
   }
 }
 
-// Any 3 destroyed panels, anywhere = game over. (Row-based logic was
-// considered but isometric skew makes rows impossible to eyeball on
-// screen — same-row panels land at different heights — so this is a
-// flat count instead.)
+// ── Game over: 3 destroyed panels ──────────────────────────────
+// Originally required 3 destroyed panels spread across 3 distinct
+// internal grid rows, but isometric skew makes rows impossible to
+// eyeball on screen (same-row panels land at different heights),
+// so this simplified to: any 3 destroyed panels, anywhere = game over.
 function checkDestroyedRowsGameOver(){
   if(!gameRunning) return;
   const destroyedCount = panels.reduce((n,p)=>n+(p.destroyed?1:0),0);
@@ -3484,7 +3651,10 @@ function updateHUD(){
   // Salt / auto system — show bar below water bar when auto system purchased
   const spct=Math.round(saltLevel*100);
   const saltBox=el('saltbox');
-  if(saltBox) saltBox.style.display=autoSystemBought?'block':'none';
+  if(saltBox){
+    saltBox.style.display=autoSystemBought?'block':'none';
+    requestAnimationFrame(updateHudBottomLimit);
+  }
   const sfill=el('sfill');
   if(sfill){
     sfill.style.width=spct+'%';
@@ -3682,26 +3852,28 @@ async function gameOver(reason, title){
   });
 }
 
-const TIGER_COST = 100000;
-function equipTigerUniform() {
-  if (!tigerUniformBought) return;
-  equippedHat='tiger'; equippedShirt='tiger';
-  equippedVest='tiger'; equippedPants='tiger';
+const LEOPARD_COST = 100000;
+function equipLeopardUniform() {
+  if (!leopardUniformBought) return;
+  equippedHat='leopard';
+  equippedVest='leopard'; equippedPants='leopard';
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
   updateHUD(); openBank();
 }
-function buyTigerUniform() {
-  if (bankTotal < TIGER_COST || tigerUniformBought) return;
+function buyLeopardUniform() {
+  if (bankTotal < LEOPARD_COST || leopardUniformBought) return;
   const colors = ['blue','green','purple','red'];
   const allBought = colors.every(k =>
-    boughtHats.has(k) && boughtShirts.has(k) && boughtVests.has(k) && boughtPants.has(k)
+    boughtHats.has(k) && boughtVests.has(k) && boughtPants.has(k)
   );
   if (!allBought) { showAlert('Buy all colors of all clothing items first!'); return; }
-  bankTotal -= TIGER_COST;
-  tigerUniformBought = true;
-  equippedHat='tiger'; equippedShirt='tiger';
-  equippedVest='tiger'; equippedPants='tiger';
+  bankTotal -= LEOPARD_COST;
+  leopardUniformBought = true;
+  equippedHat='leopard';
+  equippedVest='leopard'; equippedPants='leopard';
   sfxBuy();
-  showAlert('🐯 Tiger Uniform unlocked!');
+  if(window.__forceCosmeticsUpdate) window.__forceCosmeticsUpdate();
+  showAlert('🐆 Leopard Uniform unlocked!');
   updateHUD(); openBank();
 }
 
@@ -3759,7 +3931,8 @@ function fullRestart(){
   equippedHat='default';equippedShirt='default';
   equippedVest='default';equippedPants='default';
   boughtVests=new Set(['default']);
-  tigerUniformBought=false;
+  equippedMopColor='default';boughtMopColors=new Set(['default']);
+  leopardUniformBought=false;
   extraTimeBought1=false;extraTimeBought2=false;extraTimeBought3=false;extraTimeBought4=false;
   // Go back to splash/name screen
   const ov=document.getElementById('overlay');
@@ -3810,9 +3983,12 @@ function fullRestart(){
       </div>
     </div>
     <button class="btn" type="button"
-      onclick="startGame()"
+      data-action="start-game"
       style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;">▶ Start Cleaning</button>
-      <button type="button" data-action="tutorial" style="margin-top:6px;padding:10px 28px;font-size:13px;letter-spacing:2px;text-transform:uppercase;background:rgba(20,20,60,0.85);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#aabbcc;cursor:pointer;font-family:inherit;">📖 Tutorial</button>
+      <div style="display:flex;gap:10px;margin-top:6px;justify-content:center;flex-wrap:wrap;">
+        <button type="button" data-action="tutorial" style="padding:10px 22px;font-size:13px;letter-spacing:2px;text-transform:uppercase;background:rgba(20,20,60,0.85);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#44ddff;cursor:pointer;font-family:inherit;">📖 Tutorial</button>
+        <button type="button" onclick="openSettings()" style="padding:10px 22px;font-size:13px;letter-spacing:2px;text-transform:uppercase;background:rgba(20,20,60,0.85);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#44ddff;cursor:pointer;font-family:inherit;">⚙️ Settings</button>
+      </div>
     
       <!-- Daily goal question -->
       <div style=\"font-size:13px;color:#44ddff;letter-spacing:0.5px;font-family:Arial,sans-serif;text-align:center;margin-bottom:4px;\">
@@ -3847,23 +4023,30 @@ function isoBox(gx,gy,gz,gw,gd,gh,cT,cL,cR,alpha=1){
 }
 
 // ── Grass ground texture helpers ────────────────────────────────
-// Low-frequency layered-sine "patch" noise picks which tiles get a
-// tuft or a pebble, so placement reads as scattered/natural rather
-// than a strict pattern.
+// Low-frequency layered-sine "patch" noise (same cheap approach as the
+// leopard cosmetic pattern) picks which of 3 tone tiers a tile belongs
+// to, so the field reads as loose sunlit/shadowed clumps of grass
+// rather than a strict checkerboard — inspired by the mottled/painterly
+// look of the reference image, recreated from scratch rather than
+// reproducing that (copyrighted, watermarked) stock asset. Colors stay
+// in the game's existing dark night palette rather than the reference's
+// bright daylight green, since this scene is lit by moonlight.
 function grassPatchNoise(x,y){
   const n = Math.sin(x*0.15)*Math.cos(y*0.18)
           + Math.sin((x+y)*0.09)*0.6
           + Math.sin((x*0.6-y*0.4)*0.12)*0.4;
   return (n+2.0)/4.0; // roughly 0..1
 }
-// Single flat grass tone, kept as a checkerboard pair (not one flat
-// color) purely for the same subtle per-tile crispness the ground
-// always had, not for variation.
+// Single flat grass tone (sampled directly from the light-green patch
+// the user circled in a screenshot) — replaces the earlier multi-tier
+// mottled version, which read as uneven/patchy rather than a clean field.
+// Kept as a checkerboard pair (not one flat color) purely for the same
+// subtle per-tile crispness the ground always had, not for variation.
 const GRASS_A='#2e5019', GRASS_B='#233f14', GRASS_E='#16290d';
-// Small scattered grass tufts (a few curved blade strokes). Placed on
-// a sparse, deterministic subset of tiles (~6%) via a second,
-// differently-offset noise channel so tuft placement doesn't line up
-// with the tone patches.
+// Small scattered grass tufts (a few curved blade strokes), matching
+// the tufts poking up in the reference image. Placed on a sparse,
+// deterministic subset of tiles (~6%) via a second, differently-offset
+// noise channel so tuft placement doesn't line up with the tone patches.
 function drawGrassTuft(gx,gy,seed){
   const s=iso(gx+0.5,gy+0.5,0.02);
   ctx.save();
@@ -3882,7 +4065,9 @@ function drawGrassTuft(gx,gy,seed){
   ctx.restore();
 }
 // Small scattered pebbles — flat-shaded angular polygons (2-3 facets)
-// in muted tan/grey-brown, breaking up the flat green.
+// in muted tan/grey-brown, breaking up the flat green the way the
+// reference's scattered stones do, without needing dark shadow patches
+// to add visual interest.
 function drawRock(gx,gy,seed){
   const s=iso(gx+0.5,gy+0.5,0.03);
   const sz=5+((Math.sin(seed*1.7)+1)*3); // ~5-11px
@@ -3920,7 +4105,28 @@ function drawGround(){
           even?'#2a2a30':'#252528',
           even?'#333338':'#2e2e33');
       }
-    // Rooftop details: ventilation units, edge parapet
+  } else {
+    // Grass field — flat light-green base tone (tufts/rocks/soil border
+    // moved to drawGroundProps(), drawn after the hero texture on top)
+    for(let x=-ext;x<ext;x++)
+      for(let y=-ext;y<ext+6;y++){
+        isoBox(x,y,0,1,1,.055,(x+y)%2===0?GRASS_A:GRASS_B,GRASS_E,GRASS_E);
+      }
+  }
+}
+
+// Props that have real height/volume (parapet walls, AC vent units, grass
+// tufts, rocks, soil border) — split out from drawGround() and drawn
+// AFTER drawGroundHero() so the opaque stretched photo texture (which
+// paints over everything drawn before it, since this is a 2D painter's-
+// algorithm canvas with no z-buffer) doesn't hide them. This also means
+// the AC vent units here are the real fix for "AC unit not proportional
+// to the water tank" — they're isoBox 3D props in the same grid-unit
+// scale as drawTank(), so they're inherently proportional to it, unlike
+// anything baked into the flat photo texture.
+function drawGroundProps(){
+  const ext=18;
+  if(selectedStage==='rooftop'){
     // Edge parapet (low wall around perimeter)
     for(let x=-ext;x<ext;x++){
       isoBox(x,-ext,0,1,1,.18,'#555560','#3a3a44','#454550');
@@ -3936,11 +4142,9 @@ function drawGround(){
       isoBox(vx+.1,vy+.1,.55,.7,.7,.12,'#4a4a55','#333338','#3a3a44');
     }
   } else {
-    // Grass field — flat light-green tone + scattered tufts/pebbles
     const tufts=[], rocks=[];
     for(let x=-ext;x<ext;x++)
       for(let y=-ext;y<ext+6;y++){
-        isoBox(x,y,0,1,1,.055,(x+y)%2===0?GRASS_A:GRASS_B,GRASS_E,GRASS_E);
         const tuftN = grassPatchNoise(x*2.3+100, y*3.1+50);
         if(tuftN>0.94) tufts.push([x,y,x*12.9+y*7.3]);
         const rockN = grassPatchNoise(x*3.7-60, y*1.9+200);
@@ -3948,7 +4152,8 @@ function drawGround(){
       }
     for(const[tx,ty,seed]of tufts) drawGrassTuft(tx,ty,seed);
     for(const[rx,ry,seed]of rocks) drawRock(rx,ry,seed);
-    // Soil border — a raised dirt lip around the true edge of the field
+    // Soil border — a raised dirt lip around the true edge of the field,
+    // echoing the reference's brown edge in a muted, night-appropriate tone
     const soilT='#3a2814', soilAlt='#332211', soilL='#241809', soilR='#2c1e0c';
     for(let x=-ext;x<ext;x++){
       isoBox(x,-ext,0,1,1,.12,(x%2===0)?soilT:soilAlt,soilL,soilR);
@@ -3961,18 +4166,35 @@ function drawGround(){
   }
 }
 
-// Two big pine trees flanking the field, left and right, only shown on
-// the grass stage. Positions solved for the iso projection so the
+// ── Trees (decorative — grass stage only) ───────────────────────
+// Two big pine trees flanking the field, left and right. Positions
+// checked against the worst-case panel bounding box across all 9 block
+// anchors (~x:-11..11, y:-8..7 at max level) and against the three
+// refill tanks (water -14,13 / salt -11.5,13 / extra water 9,-10) so
 // trees never overlap panels or props at any level, with wide margin.
+// NOTE: not visually verified in a live browser from this environment —
+// worth a quick look after `python -m http.server 8000` and nudging
+// TREES[].gx/gy if a corner reads off-screen or too close to a tank.
+// Positions computed from a screenshot you sent (measured the trunk-base
+// pixel of the original gx:-16/gy:0 and gx:15/gy:0 trees, solved the iso
+// projection backward to find camera+scale, then solved forward for
+// what grid coords land under your two red-circled spots). The earlier
+// gy:0 values kept both trees riding the "middle depth" band, which put
+// them up near the top edge of the diamond instead of out at its actual
+// left/right tips — these go much deeper into +y / -y to reach the tips.
+// TREES left empty — corner pine trees removed at the user's request.
+// Positions are kept commented for easy restoration if wanted later.
 const TREES = [
-  { gx:-17, gy:21,  scale:1.15, jitter:0.0 }, // left tip
-  { gx: 15, gy:-16, scale:1.20, jitter:2.6 }, // right tip
+  // { gx:-17, gy:21,  scale:1.15, jitter:0.0 }, // left tip
+  // { gx: 15, gy:-16, scale:1.20, jitter:2.6 }, // right tip
 ];
 
 // Isometric sprite/tile style pine — a tall trunk with nested triangular
 // boughs (wide at the base, narrowing to a point), drawn directly in
 // screen-pixel space off a single ground anchor rather than as
-// grid-projected ellipses.
+// grid-projected ellipses. The earlier ellipse-stack version read as a
+// row of round blobs on a pole ("a lamp"); real drooping-bough silhouette
+// fixes that and reads as a pine tree at a glance, tile-sprite style.
 function drawTreeBough(cx, topY, bottomY, width, fill, edge){
   // Each bough is a triangle with a shallow "M" droop along the bottom
   // edge (branch tips sag between the trunk and the outer point),
@@ -4013,7 +4235,8 @@ function drawTree(t){
 
   // Boughs — 5 nested tiers, each overlapping ~40% into the one below
   // so the silhouette reads as continuous foliage, wide at the bottom
-  // and narrowing to a point at top.
+  // and narrowing to a point at top. Total height (~6.5x the trunk) is
+  // what makes this read as "tall pine" rather than a shrub.
   const boughs=[
     { w:150, h:130 },
     { w:120, h:112 },
@@ -4289,6 +4512,7 @@ function drawSaltTank(){
   // Cabinet base position in grid — placed far from panels, safely outside all panel blocks
   const bx=-11.5, by=13;
   const bW=0.95, bD=0.7, bH=2.5; // blue box width, depth, height
+  {const _ts=iso(bx+0.5,by+0.4,1.2); markHudOverlap(_ts.x,_ts.y,50,75);}
 
   // ── Palette ──────────────────────────────────────────────────────
   const blueT='#3a7fc1', blueL='#1f5490', blueR='#2e6aaa';
@@ -4504,6 +4728,7 @@ function drawSaltTank(){
 function drawPanel(p){
   const{gx,gy,dirtLevel,poop,leaf,highlight,destroyed}=p;
   const gz = p.gz + (p.introOffset||0);
+  {const _ps=iso(gx+0.9,gy+0.5,gz+0.3); markHudOverlap(_ps.x,_ps.y,55,45);}
   // Legs
   for(const[ox,oy]of[[.15,.1],[1.5,.1],[.15,.8],[1.5,.8]])
     isoBox(gx+ox,gy+oy,0,.17,.17,gz-.1,C.fT,C.fL,C.fR);
@@ -4784,37 +5009,44 @@ function drawPlayer(){
   ctx.beginPath();ctx.ellipse(-8,-92,5,3,0,0,Math.PI*2);ctx.fill();
   ctx.beginPath();ctx.ellipse(8,-92,5,3,0,0,Math.PI*2);ctx.fill();
 
-  // — Hat (tiger head or standard helmet) —
-  if(equippedHat==='tiger'){
-    // TIGER HEAD HAT — cartoon style
+  // — Hat (leopard head or standard helmet) —
+  if(equippedHat==='leopard'){
+    // LEOPARD HEAD HAT — cartoon style
     ctx.save();
+    // Helper — draws a leopard rosette (dark ring + tan-ish center) at (x,y)
+    function rosette(x,y,r){
+      ctx.fillStyle='#1a0f05';
+      ctx.beginPath();ctx.ellipse(x,y,r,r*0.8,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#c8964e';
+      ctx.beginPath();ctx.ellipse(x,y,r*0.55,r*0.45,0,0,Math.PI*2);ctx.fill();
+    }
     // Ears — round, behind head, at top
-    ctx.fillStyle='#cc5500';
+    ctx.fillStyle='#d2a55e';
     ctx.beginPath();ctx.arc(-18,-138,11,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(18,-138,11,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#1a0800';
     ctx.beginPath();ctx.arc(-18,-138,7,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(18,-138,7,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#e87010';
+    ctx.fillStyle='#e8c088';
     ctx.beginPath();ctx.arc(-18,-138,4,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(18,-138,4,0,Math.PI*2);ctx.fill();
     // Main round head
-    ctx.fillStyle='#cc5500';
+    ctx.fillStyle='#d2a55e';
     ctx.beginPath();ctx.arc(0,-122,32,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='#1a0800';ctx.lineWidth=2;
     ctx.beginPath();ctx.arc(0,-122,32,0,Math.PI*2);ctx.stroke();
-    // Forehead stripes
-    ctx.strokeStyle='#1a0800';ctx.lineWidth=3.5;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(-14,-150);ctx.quadraticCurveTo(-11,-140,-9,-130);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(-5,-152);ctx.quadraticCurveTo(-3,-142,-2,-132);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(5,-152);ctx.quadraticCurveTo(3,-142,2,-132);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(14,-150);ctx.quadraticCurveTo(11,-140,9,-130);ctx.stroke();
-    // Cheek stripes
-    ctx.lineWidth=3;
-    ctx.beginPath();ctx.moveTo(-30,-126);ctx.quadraticCurveTo(-26,-120,-22,-112);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(-32,-114);ctx.quadraticCurveTo(-28,-109,-23,-102);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(30,-126);ctx.quadraticCurveTo(26,-120,22,-112);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(32,-114);ctx.quadraticCurveTo(28,-109,23,-102);ctx.stroke();
+    // Leopard rosettes scattered across forehead and cheeks
+    rosette(-14,-148,5);
+    rosette(-4,-152,4.5);
+    rosette(8,-150,5);
+    rosette(18,-144,4.5);
+    rosette(-24,-130,4.5);
+    rosette(-26,-116,4);
+    rosette(24,-130,4.5);
+    rosette(26,-116,4);
+    rosette(-8,-136,3.5);
+    rosette(10,-136,4);
+    rosette(0,-122,3.5);
     // Muzzle — tan oval
     ctx.fillStyle='#f0d090';
     ctx.beginPath();ctx.ellipse(0,-110,18,14,0,0,Math.PI*2);ctx.fill();
@@ -5045,6 +5277,7 @@ function drawSprinkler(p, sprayActive, phase){
 function drawAutoSystem(){
   if(!autoSystemBought)return;
   const bx=-9, by=11.5; // near the water tank
+  {const _as=iso(bx+0.6,by+0.3,0.8); markHudOverlap(_as.x,_as.y,60,60);}
 
   ctx.save();
   // Control box (beige/grey wall-mounted box with label)
@@ -5371,6 +5604,15 @@ function drawSpeechBubble(){
   ctx.restore();
 }
 
+function drawPlayerAuto(){
+  if(window.__player3DReady && window.__draw3DPlayer){
+    const sc=iso(player.gx,player.gy,player.gz);
+    const drawn=window.__draw3DPlayer(ctx, sc.x, sc.y);
+    if(!drawn) drawPlayer();
+  } else {
+    drawPlayer();
+  }
+}
 function renderScene(){
   const objs=[];
   if(selectedStage==='grass'){
@@ -5392,7 +5634,7 @@ function renderScene(){
   if(autoSystemBought) objs.push({d:-2+5+.5,fn:drawSaltTank});
   // Auto system drawn at fixed spot
   if(autoSystemBought) objs.push({d:-9+11.5+0.5,fn:drawAutoSystem});
-  objs.push({d:player.gx+player.gy+0.1,fn:drawPlayer});
+  objs.push({d:player.gx+player.gy+0.1,fn:drawPlayerAuto});
   objs.sort((a,b)=>a.d-b.d);
   for(const o of objs)o.fn();
 }
@@ -5449,9 +5691,24 @@ function loop(now){
   // Mobile joystick
   if(joy&&joy.active){const jm=getMobileMove();mx+=jm.mx;my+=jm.my;}
 
-  if(mx||my){
+  // If the player wants to move while cleaning, interrupt the cleaning
+  // animation — but only after a brief grace period (~0.3s), not
+  // instantly. Interrupting on frame one meant that holding a movement
+  // key at the same moment you clean (e.g. approaching the next panel)
+  // skipped the animation entirely — you'd never actually see it play.
+  // This still keeps things responsive (a third of a second, not the
+  // full ~0.9s animation) while guaranteeing the animation is visible
+  // at all. Safe for the same reason as before: the actual clean effect
+  // already applied instantly in tryClean(), this is purely cosmetic.
+  const SWEEP_INTERRUPT_GRACE = 2.1; // sweepPh units (rate dt*7) - roughly 0.3s
+  if(player.sweeping && (mx||my) && player.sweepPh > SWEEP_INTERRUPT_GRACE){
+    player.sweeping=false;
+    player.sweepPh=0;
+  }
+
+  if(!player.sweeping && (mx||my)){
     const len=Math.hypot(mx,my);
-    const spd=SPEED*(equippedHat==='tiger'?1.1:1.0)*dt;
+    const spd=SPEED*(equippedHat==='leopard'?1.25:1.0)*dt;
     const ndx=mx/len*spd, ndy=my/len*spd;
     // Try full move
     const nx=player.gx+ndx, ny=player.gy+ndy;
@@ -5508,6 +5765,11 @@ function loop(now){
   if(player.sweeping){
     player.sweepPh+=dt*7; // faster scrubbing
     if(player.sweepPh>Math.PI*2){player.sweeping=false;player.sweepPh=0;}
+  }
+
+  // ── 3D character update (walk/idle/clean pose + offscreen render) ──
+  if(window.__update3DPlayer){
+    window.__update3DPlayer(dt, {moving:!!(mx||my), sweeping:player.sweeping, face:player.face});
   }
 
   // ── Water refill (blue tank gx=-14,gy=13) — placed far from panels ──
@@ -5610,7 +5872,9 @@ function loop(now){
   updateParticles(dt);
 
   // ── Draw ───────────────────────────────────────────────────
-  drawSky();drawGround();drawPuddles();renderScene();drawBirds();drawDustStorm();drawRainCloud();drawParticles();drawSpeechBubble();
+  _hudOverlapFrame = false;
+  drawSky();drawGround();drawGroundHero();drawGroundProps();drawPuddles();renderScene();drawBirds();drawDustStorm();drawRainCloud();drawParticles();drawSpeechBubble();
+  applyHudFade();
 
   if(tdist<2.5){
     const ts=iso(tx,ty,3.2);
@@ -5643,7 +5907,8 @@ function initGame(){
   equippedHat='default';equippedShirt='default';
   equippedVest='default';equippedPants='default';
   boughtVests=new Set(['default']);
-  tigerUniformBought=false;
+  equippedMopColor='default';boughtMopColors=new Set(['default']);
+  leopardUniformBought=false;
   extraTimeBought1=false;extraTimeBought2=false;extraTimeBought3=false;extraTimeBought4=false;
   stopMusic(); musicStarted=false;
   speechBubble={active:false,timer:0,text:''};
@@ -5821,7 +6086,7 @@ document.addEventListener('touchstart', function(){}, {passive:true});
 </script>
 
 <!-- Tutorial Overlay -->
-<div id="tutorialOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(3,7,20,0.97);z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+<div id="tutorialOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:rgba(3,7,20,0.97);z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
   <div style="max-width:480px;width:90%;margin:0 auto;padding:20px 0 30px;font-family:Arial,sans-serif;">
     <h2 style="color:#44ddff;font-size:20px;letter-spacing:2px;text-align:center;margin-bottom:16px;">📖 How to Play</h2>
     <div style="margin-bottom:10px;background:rgba(6,14,32,0.8);border-radius:10px;padding:12px 16px;">
@@ -5849,7 +6114,7 @@ document.addEventListener('touchstart', function(){}, {passive:true});
 </div>
 
 <!-- Settings Overlay -->
-<div id="settingsOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(3,7,20,0.97);z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+<div id="settingsOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:rgba(3,7,20,0.97);z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
   <div style="max-width:480px;width:90%;margin:0 auto;padding:calc(20px + env(safe-area-inset-top, 0px)) 0 30px;font-family:Arial,sans-serif;">
     <h2 style="color:#44ddff;font-size:20px;letter-spacing:2px;text-align:center;margin-bottom:16px;">⚙️ Settings</h2>
 
@@ -5867,7 +6132,7 @@ document.addEventListener('touchstart', function(){}, {passive:true});
 
     <div id="shareCopiedMsg" style="display:none;text-align:center;color:#44ddff;font-size:12px;margin:-2px 0 10px;letter-spacing:1px;">Link copied!</div>
 
-    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.8.8</span></div>
+    <div style="text-align:center;color:#5a7a99;font-size:11px;letter-spacing:1px;margin:18px 0 22px;">SolarCleanGame · Version <span id="settingsVersion">4.10.2</span></div>
 
     <button onclick="closeSettings()" style="display:block;margin:0 auto;padding:12px 40px;font-size:14px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#1a3a6a,#2255aa);border:1px solid rgba(68,170,255,0.6);border-radius:8px;color:#fff;cursor:pointer;font-family:inherit;">🏠 Home</button>
   </div>
@@ -5900,16 +6165,39 @@ window.addEventListener('load', function() {
 </script>
 
 <script>
-// Event delegation for dynamically-created tutorial button
+// Generic data-action delegation (extended from the original
+// tutorial-only version). Using delegated touchend+click instead of
+// inline onclick avoids a known WebView quirk: a real touchend can be
+// followed ~300ms later by a synthetic "ghost" click at the same screen
+// coordinates, which can land on whatever now sits there if the DOM
+// changed in between. touchend calls preventDefault() to suppress that
+// trailing click on touch devices; the click listener remains as the
+// path for non-touch input (desktop mouse). _lastActionAt guards
+// against both still firing for the same tap on WebViews that don't
+// honor preventDefault consistently.
+var _lastActionAt = {};
+function _runUIAction(action){
+  var now = Date.now();
+  if(_lastActionAt[action] && now - _lastActionAt[action] < 400) return; // debounce duplicate fire
+  _lastActionAt[action] = now;
+  switch(action){
+    case 'tutorial': openTutorial(); break;
+    case 'start-game': startGame(); break;
+  }
+}
+function _findActionEl(ev){
+  var t = ev.target;
+  if(t && t.closest) return t.closest('[data-action]');
+  if(t && t.getAttribute && t.getAttribute('data-action')) return t;
+  return null;
+}
 document.addEventListener('click', function(ev){
-  var btn = ev.target.closest ? ev.target.closest('[data-action="tutorial"]') : null;
-  if(!btn && ev.target.getAttribute && ev.target.getAttribute('data-action')==='tutorial') btn=ev.target;
-  if(btn){ ev.preventDefault(); openTutorial(); }
+  var el = _findActionEl(ev);
+  if(el){ ev.preventDefault(); _runUIAction(el.getAttribute('data-action')); }
 });
 document.addEventListener('touchend', function(ev){
-  var btn = ev.target.closest ? ev.target.closest('[data-action="tutorial"]') : null;
-  if(!btn && ev.target.getAttribute && ev.target.getAttribute('data-action')==='tutorial') btn=ev.target;
-  if(btn){ ev.preventDefault(); openTutorial(); }
+  var el = _findActionEl(ev);
+  if(el){ ev.preventDefault(); _runUIAction(el.getAttribute('data-action')); }
 },{passive:false});
 </script>
 
@@ -5985,6 +6273,912 @@ if('serviceWorker' in navigator && location.hostname === 'game.solarcleangame.co
       .catch(function(e){ console.log('SW:', e); });
   });
 }
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     3D PLAYER CHARACTER (three.js) — EXPERIMENTAL, v4.8.5
+     Renders the Meshy-generated rigged character to an offscreen
+     WebGL canvas each frame, then the classic game loop script
+     composites that image onto the main 2D canvas at the player's
+     iso position (see drawPlayerAuto() above). While the model is
+     still downloading, the original procedural 2D character is used
+     as a fallback so there's never a blank gap.
+
+     TUNING NOTES (things you'll likely want to adjust after testing
+     on a real device, since this was built without a visual preview):
+       - CHARACTER_SCALE below controls on-screen size
+       - FOOT_ANCHOR controls vertical alignment to the ground point
+       - FACE_OFFSET controls which way the model turns to face
+         movement — if it's backwards, try adding/removing Math.PI
+       - The cleaning-pose angles in applyCleaningPose() are a first
+         guess at "arms raised, scrubbing" — nudge the numbers there
+         if the arms look wrong (e.g. raised too high/low, wrong side)
+════════════════════════════════════════════════════════════════ -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+// Upload the optimized character.glb to your site root alongside index.html
+const CHARACTER_GLB_URL = './character.glb?v=3';
+const CHARACTER_BIGMOP_GLB_URL = './character_bigmop.glb?v=4'; // used once the Big Mop upgrade is purchased
+
+// On-screen size + anchor tuning — adjust these after seeing it on device
+const CHARACTER_SCALE = 0.39; // multiplier on the offscreen render size (~25% bigger per feedback)
+const FOOT_ANCHOR = 0.94;     // 0=top of render, 1=bottom; where the feet sit
+const FACE_OFFSET = Math.PI/2; // rotation applied on top of movement angle (flipped 180° per feedback)
+const CLEAN_FACING_OVERRIDE = 0; // fixed facing angle used only while cleaning — tune this one number until the two-handed pose looks right, regardless of approach direction
+const CLEAN_ARM_SEPARATION = 0.2; // small constant gap between the two arms, now safe to tune since facing is locked
+const TOOL_ROLL = Math.PI; // rotates the tool around its own length so the brush face (not the stick's back) touches the panel — starting guess, may need sign/magnitude tuning
+
+// Bind-pose (rest) local rotations, read directly from the uploaded .glb.
+// Used to reset bones to a clean standing pose for idle/cleaning states,
+// since glTF animation keyframes are absolute, not relative offsets.
+const BIND_POSE = {
+  RightArm:      [0.2812049984931946, -0.29830557107925415, 0.1078696995973587, 0.9057050943374634],
+  RightForeArm:  [-0.30048781633377075, 0.2769726812839508, -0.17059288918972015, 0.8965998291969299],
+  RightHand:     [-0.4779559373855591, 0.44045010209083557, -0.32479700446128845, 0.6870725750923157],
+  LeftArm:       [0.12341184914112091, 0.14097602665424347, -0.02720792032778263, 0.9819139838218689],
+  LeftForeArm:   [-0.13385038077831268, -0.12904119491577148, 0.1092628538608551, 0.9764702320098877],
+  LeftHand:      [-0.0062196203507483006, -0.005969237070530653, 0.017947189509868622, 0.9998018145561218],
+  Spine:         [-0.06307316571474075, -0.10002265870571136, 0.09874182194471359, 0.9880624413490295],
+  Spine01:       [0, 0, 0, 1],
+  Spine02:       [0.49097123742103577, 0.48422950506210327, 0.6052587628364563, 0.3976568579673767],
+  Hips:          [-0.49136990308761597, -0.49136999249458313, -0.6015672087669373, 0.3939899802207947],
+  RightUpLeg:    [-0.44794145226478577, -0.556577742099762, 0.49432191252708435, 0.49519234895706177],
+  RightLeg:      [0.0449414923787117, -0.04590947926044464, -0.04152469336986542, 0.9970698356628418],
+  RightFoot:     [-0.5073674917221069, 0.028054939582943916, 0.019852731376886368, 0.86104416847229],
+  RightToeBase:  [-0.29177260398864746, 0.013942484743893147, 0.004254350438714027, 0.9563766717910767],
+  LeftUpLeg:     [-0.3468421995639801, -0.6367413401603699, 0.48739248514175415, 0.48652803897857666],
+  LeftLeg:       [0.040618646889925, 0.03753307834267616, 0.03401836007833481, 0.9978898763656616],
+  LeftFoot:      [-0.497551292181015, -0.033683255314826965, -0.02522270753979683, 0.8664132356643677],
+  LeftToeBase:   [-0.300574392080307, -0.01725030317902565, -0.00543732475489378, 0.9535868763923645],
+  neck:          [0.06450382620096207, 0.09739024937152863, -0.09673848003149033, 0.9884310960769653],
+  Head:          [0.22164812684059143, -9.962999683921225e-06, -0.0021521085873246193, 0.9751243591308594],
+  RightShoulder: [0.5131875276565552, -0.5443972945213318, 0.37242957949638367, 0.5491505861282349],
+  LeftShoulder:  [0.49279192090034485, 0.5629261136054993, -0.5822685956954956, 0.31817230582237244]
+};
+
+const RENDER_W = 260, RENDER_H = 340;
+const offCanvas = document.createElement('canvas');
+offCanvas.width = RENDER_W; offCanvas.height = RENDER_H;
+const renderer = new THREE.WebGLRenderer({canvas: offCanvas, alpha:true, antialias:true});
+renderer.setSize(RENDER_W, RENDER_H, false);
+renderer.setClearColor(0x000000, 0);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene3d = new THREE.Scene();
+const camera3d = new THREE.PerspectiveCamera(28, RENDER_W/RENDER_H, 1, 3000);
+
+scene3d.add(new THREE.AmbientLight(0xffffff, 0.85));
+const sun = new THREE.DirectionalLight(0xfff2dd, 1.2);
+sun.position.set(50, 120, 80);
+scene3d.add(sun);
+const fill = new THREE.DirectionalLight(0x88aaff, 0.35);
+fill.position.set(-60, 40, -60);
+scene3d.add(fill);
+
+let model=null, mixer=null, walkAction=null, walkWeight=0, sweepClock=0, loadedIsBigMop=false;
+let skinnedMaterial=null, baseTextureCanvas=null, lastCosmetics=null, toolMaskData=null, headMaskData=null, vestMaskData=null;
+let bones = {};
+let ready = false;
+
+const WORLD_X = new THREE.Vector3(1,0,0);
+const WORLD_Y = new THREE.Vector3(0,1,0);
+const WORLD_Z = new THREE.Vector3(0,0,1);
+const CAMERA_VIEW_DIR = new THREE.Vector3(); // filled in once the camera is positioned, used to detect arm foreshortening
+
+// Rotates `bone` so its local +Y axis (the direction the bone extends,
+// standard for this kind of rig) points toward `targetWorldDir` instead
+// of wherever the bind pose has it. This is used to bring the bind-pose
+// arms (which point out to the sides) down to a natural hanging
+// position, without needing to guess a rotation angle by hand — it's
+// computed exactly from the bone's actual current orientation.
+const _tmpQuat = new THREE.Quaternion();
+const _parentQuat = new THREE.Quaternion();
+function alignBoneAxis(bone, targetWorldDir, localAxis){
+  if(!bone || !bone.parent) return;
+  bone.updateWorldMatrix(true, false);
+  bone.getWorldQuaternion(_tmpQuat);
+  const currentDir = localAxis.clone().applyQuaternion(_tmpQuat).normalize();
+  const correction = new THREE.Quaternion().setFromUnitVectors(currentDir, targetWorldDir.clone().normalize());
+  const newWorldQuat = correction.multiply(_tmpQuat.clone());
+  bone.parent.getWorldQuaternion(_parentQuat);
+  const newLocalQuat = _parentQuat.clone().invert().multiply(newWorldQuat);
+  bone.quaternion.copy(newLocalQuat);
+}
+const BONE_AXIS = new THREE.Vector3(0,1,0); // bones extend along local +Y in this rig
+
+const loader = new GLTFLoader();
+let isLoadingModel = false;
+
+function loadCharacterModel(url){
+  if(isLoadingModel){
+    console.log('[3D] loadCharacterModel called for', url, 'but a load is already in progress — skipped');
+    return; // avoid overlapping loads if a re-check fires mid-load
+  }
+  console.log('[3D] Loading model:', url);
+  isLoadingModel = true;
+  const isBigMop = (url === CHARACTER_BIGMOP_GLB_URL);
+  loader.load(url, (gltf)=>{
+    console.log('[3D] Model loaded successfully:', url, '(isBigMop:', isBigMop, ')');
+    const newModel = gltf.scene;
+
+    // If swapping (Big Mop purchased mid-session), clean up the old
+    // model first so we don't leak GPU memory or leave a duplicate
+    // character in the scene.
+    if(model){
+      scene3d.remove(model);
+      model.traverse(obj=>{
+        if(obj.geometry) obj.geometry.dispose();
+        if(obj.material){
+          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          for(const m of mats){
+            if(m.map) m.map.dispose();
+            m.dispose();
+          }
+        }
+      });
+    }
+
+    model = newModel;
+    scene3d.add(model);
+
+    // Capture the material + a clean canvas copy of the ORIGINAL texture
+    // for the cosmetics system — we always recolor FROM this pristine
+    // source (never from a previously-recolored version), so repeated
+    // color changes don't drift or compound.
+    //
+    // Wrapped in its own try-catch: this is newer, more complex code
+    // than the core loading path, and a failure here should disable
+    // cosmetics gracefully, NOT silently kill the entire 3D character
+    // (which is what happened last time a bug slipped into this
+    // callback with no error handling — the whole system fell back
+    // to the 2D character with no visible error at all).
+    skinnedMaterial = null;
+    baseTextureCanvas = null;
+    toolMaskData = null;
+    headMaskData = null;
+    vestMaskData = null;
+    try{
+      model.traverse(obj=>{
+        if(obj.isSkinnedMesh && obj.material && obj.material.map){
+          skinnedMaterial = obj.material;
+          // Force double-sided rendering. This mesh may have inverted/
+          // incorrect triangle winding in places (not uncommon for
+          // AI-generated meshes) — if so, default backface culling
+          // would make certain surfaces invisible from ANY angle,
+          // regardless of their texture color being entirely correct.
+          // That would exactly explain "correct pixel count, zero
+          // visible effect" for both the head mask and pure color-key
+          // matches we've seen.
+          skinnedMaterial.side = THREE.DoubleSide;
+          skinnedMaterial.needsUpdate = true;
+          const img = obj.material.map.image;
+          if(img){
+            const c = document.createElement('canvas');
+            c.width = img.width; c.height = img.height;
+            const cx = c.getContext('2d');
+            cx.drawImage(img, 0, 0);
+            baseTextureCanvas = c;
+            toolMaskData = computeToolMask(obj, img.width, img.height);
+            headMaskData = computeHeadMask(obj, img.width, img.height);
+            vestMaskData = computeVestMask(obj, img.width, img.height);
+            if(headMaskData){
+              let painted = 0;
+              for(let pi=0; pi<headMaskData.data.length; pi+=4){ if(headMaskData.data[pi] > 128) painted++; }
+              if(painted < 200){
+                console.log('[Cosmetics] Head mask has only', painted, 'pixels - too small to be reliable, discarding (helmet will use unrestricted color-key instead)');
+                headMaskData = null;
+              }
+            }
+          }
+        }
+      });
+    }catch(e){
+      console.error('[Cosmetics] Setup failed - cosmetics disabled, character will still load normally:', e);
+    }
+    lastCosmetics = null; // force a recolor pass on next update
+
+    // Camera framing — these numbers are the character's EXACT rest-pose
+    // bounding box, read directly from the .glb file's POSITION accessor
+    // (min/max). We use these hardcoded values instead of computing a
+    // live THREE.Box3 from the loaded model, because that calculation is
+    // unreliable for animated/skinned meshes and produced a badly wrong
+    // (too-close/zoomed) camera in testing. Same for both model variants
+    // — only the tool geometry differs, not the skeleton's overall size.
+    const MODEL_HEIGHT = 1.75;   // top of head to floor, in the model's own units
+    const MODEL_CENTER_Y = 0.875; // vertical midpoint
+    camera3d.position.set(0, MODEL_CENTER_Y + MODEL_HEIGHT*0.05, MODEL_HEIGHT*2.6);
+    camera3d.lookAt(0, MODEL_CENTER_Y, 0);
+    camera3d.updateMatrixWorld(true);
+    camera3d.getWorldDirection(CAMERA_VIEW_DIR); // fixed for the whole session — camera never moves
+
+    bones = {};
+    for(const name of Object.keys(BIND_POSE)){
+      const b = model.getObjectByName(name);
+      if(b) bones[name] = b;
+    }
+
+    if(gltf.animations && gltf.animations.length){
+      mixer = new THREE.AnimationMixer(model);
+      walkAction = mixer.clipAction(gltf.animations[0]);
+      walkAction.play();
+      walkAction.setEffectiveWeight(walkWeight); // preserve current blend state across a swap
+    }
+
+    ready = true;
+    loadedIsBigMop = isBigMop;
+    isLoadingModel = false;
+    window.__player3DReady = true;
+    console.log('[3D] Swap complete. loadedIsBigMop is now:', loadedIsBigMop);
+
+    // Diagnostic tests can be triggered via URL instead of the console,
+    // e.g. ?testmask=head or ?testmask=whole or ?testmask=key:vest
+    const urlParams = new URLSearchParams(window.location.search);
+    const testMask = urlParams.get('testmask');
+    if(testMask === 'head' && window.__testHeadMaskVisualize){
+      setTimeout(()=>window.__testHeadMaskVisualize(), 500);
+    } else if(testMask === 'whole' && window.__testWholeTextureRecolor){
+      setTimeout(()=>window.__testWholeTextureRecolor(), 500);
+    } else if(testMask && testMask.startsWith('key:') && window.__testColorKey){
+      const keyName = testMask.slice(4);
+      setTimeout(()=>window.__testColorKey(keyName), 500);
+    }
+  }, undefined, (err)=>{
+    isLoadingModel = false;
+    console.error('[3D] Model load FAILED for', url, '— using 2D fallback. Error:', err);
+  });
+}
+
+window.__onBigMopPurchased = function(){
+  console.log('[3D] __onBigMopPurchased fired — triggering swap to', CHARACTER_BIGMOP_GLB_URL);
+  loadCharacterModel(CHARACTER_BIGMOP_GLB_URL);
+};
+
+// Defensive check: re-verify the correct model is loaded, and correct
+// it if not. This exists because bigMopBought may be restored from a
+// saved game slightly AFTER this module's initial check runs, which
+// would otherwise leave a returning owner stuck on the normal model
+// until they repurchase (which they can't, since they already own it).
+function ensureCorrectModelLoaded(){
+  const owns = !!(window.__getBigMopBought && window.__getBigMopBought());
+  if(owns && !loadedIsBigMop){
+    console.log('[3D] ensureCorrectModelLoaded: owns big mop but wrong model loaded — correcting');
+    loadCharacterModel(CHARACTER_BIGMOP_GLB_URL);
+  }
+}
+
+loadCharacterModel(window.__getBigMopBought && window.__getBigMopBought() ? CHARACTER_BIGMOP_GLB_URL : CHARACTER_GLB_URL);
+// Re-check a few times over the first couple seconds to catch save-data
+// that finishes restoring after our initial (synchronous) check.
+setTimeout(ensureCorrectModelLoaded, 500);
+setTimeout(ensureCorrectModelLoaded, 1500);
+setTimeout(ensureCorrectModelLoaded, 3000);
+
+// ── Tool mask (precise, geometry-based) ─────────────────────────
+// Unlike the other garments, the mop/squeegee tool's actual color
+// turned out to be a similar gray to the helmet — which meant buying
+// a hat color was recoloring the TOOL instead (they were indistinguishable
+// by color alone). Since we know exactly which vertices belong to the
+// tool (RightHand-weighted, beyond the wrist — same technique used
+// earlier to scale up the brush head), we can rasterize their UV
+// footprint into a precise pixel mask instead of relying on color
+// matching. This mask is checked FIRST, before any color-key check,
+// so tool pixels never get mistaken for helmet pixels again.
+// Generic version: rasterizes the UV footprint of all triangles whose
+// vertices are predominantly weighted to `boneName`, optionally
+// filtered further by a Y-position test in local bind-pose space
+// (used for the tool, to exclude the hand itself and only capture
+// what's held beyond the wrist).
+function computeBoneMask(skinnedMesh, texW, texH, boneName, yFilter, weightThreshold){
+  weightThreshold = (weightThreshold === undefined) ? 0.5 : weightThreshold;
+  const geo = skinnedMesh.geometry;
+  const pos = geo.attributes.position;
+  const uv = geo.attributes.uv;
+  const skinIndex = geo.attributes.skinIndex;
+  const skinWeight = geo.attributes.skinWeight;
+  const indexAttr = geo.index;
+  if(!pos || !uv || !skinIndex || !skinWeight || !indexAttr){
+    console.log('[Cosmetics] computeBoneMask('+boneName+') ABORTED - missing attribute. pos:', !!pos, 'uv:', !!uv, 'skinIndex:', !!skinIndex, 'skinWeight:', !!skinWeight, 'index:', !!indexAttr);
+    return null;
+  }
+
+  const skeleton = skinnedMesh.skeleton;
+  if(!skeleton || !skeleton.bones){
+    console.log('[Cosmetics] computeBoneMask('+boneName+') ABORTED - no skeleton/bones');
+    return null;
+  }
+  let boneIdx = -1;
+  for(let i=0;i<skeleton.bones.length;i++){
+    if(skeleton.bones[i].name === boneName){ boneIdx = i; break; }
+  }
+  if(boneIdx < 0){
+    console.log('[Cosmetics] computeBoneMask('+boneName+') ABORTED - bone not found among', skeleton.bones.length, 'bones. Names:', skeleton.bones.map(b=>b.name).join(','));
+    return null;
+  }
+
+  const vCount = pos.count;
+  const isMatch = new Uint8Array(vCount);
+  const getters = ['getX','getY','getZ','getW'];
+  let matchedVerts = 0;
+  for(let v=0; v<vCount; v++){
+    let w = 0;
+    for(let k=0;k<4;k++){
+      if(skinIndex[getters[k]](v) === boneIdx) w += skinWeight[getters[k]](v);
+    }
+    if(w > weightThreshold && (!yFilter || yFilter(pos.getY(v)))){ isMatch[v] = 1; matchedVerts++; }
+  }
+
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = texW; maskCanvas.height = texH;
+  const mctx = maskCanvas.getContext('2d');
+  mctx.fillStyle = '#000'; mctx.fillRect(0,0,texW,texH);
+  mctx.fillStyle = '#fff';
+
+  const idxArr = indexAttr.array;
+  let matchedTris = 0;
+  for(let t=0; t<idxArr.length; t+=3){
+    const a=idxArr[t], b=idxArr[t+1], c=idxArr[t+2];
+    if(isMatch[a] && isMatch[b] && isMatch[c]){
+      const ax=uv.getX(a)*texW, ay=(1-uv.getY(a))*texH;
+      const bx=uv.getX(b)*texW, by=(1-uv.getY(b))*texH;
+      const cx=uv.getX(c)*texW, cy=(1-uv.getY(c))*texH;
+      mctx.beginPath();
+      mctx.moveTo(ax,ay); mctx.lineTo(bx,by); mctx.lineTo(cx,cy);
+      mctx.closePath(); mctx.fill();
+      matchedTris++;
+    }
+  }
+  const result = mctx.getImageData(0,0,texW,texH);
+  let paintedPixels = 0;
+  for(let i=0; i<result.data.length; i+=4){ if(result.data[i] > 128) paintedPixels++; }
+  console.log('[Cosmetics] computeBoneMask('+boneName+') bone#'+boneIdx+' | vertsMatched='+matchedVerts+'/'+vCount+' | trisMatched='+matchedTris+' | maskPixelsPainted='+paintedPixels);
+  return result;
+}
+function computeToolMask(skinnedMesh, texW, texH){
+  return computeBoneMask(skinnedMesh, texW, texH, 'RightHand', y => y > 1.40);
+}
+function computeHeadMask(skinnedMesh, texW, texH){
+  return computeBoneMask(skinnedMesh, texW, texH, 'Head', null);
+}
+function computeVestMask(skinnedMesh, texW, texH){
+  // Vest and hat turned out to share nearly identical raw texture
+  // colors (confirmed via direct sampling), so color-key matching
+  // can't reliably separate them — this uses geometry instead.
+  // Spine02 (closest bone to the chest) at a lower weight threshold
+  // (0.2, not the usual 0.5) was needed to capture enough of the
+  // torso region during testing.
+  return computeBoneMask(skinnedMesh, texW, texH, 'Spine02', null, 0.2);
+}
+
+// ── Cosmetics: texture recoloring ───────────────────────────────
+// The character's outfit colors (hat, shirt+pants "uniform", vest) are
+// changed by detecting each garment's ORIGINAL color in the texture
+// and shifting its hue/saturation to match the equipped color, while
+// preserving each pixel's original lightness (so shading/highlights
+// baked into the texture are kept). This is a color-KEY approach, not
+// a geometric mask, because the mesh's UV islands for each garment are
+// scattered across the whole texture rather than occupying separate
+// regions — see conversation notes.
+//
+// Shirt and pants share the same base color in this texture and can't
+// be independently targeted, so per user's choice they're combined
+// into one "uniform" color, driven by whichever shirt color is equipped.
+
+const COSMETIC_KEYS = {
+  uniform: { r:15, g:85,  b:145, threshold:20 },  // shirt+pants blue (tightened further - was 40)
+  vest:    { r:210,g:100, b:38,  threshold:20 },  // vest orange - catches sleeve trim; torso body now handled separately via geometric mask
+  helmet:  { r:192,g:170, b:84,  threshold:13 },  // helmet yellow/gold (tightened further based on real test evidence - back-of-vest shade was borderline-matching at threshold 20)
+  mop:     { r:96, g:144, b:192, threshold:20 },  // mop/tool light blue (tightened further - was 35)
+};
+const SKIN_PROTECT = { r:192, g:156, b:132 }; // never recolor pixels closer to this than to a garment key
+
+const COSMETIC_TARGET_HEX = {
+  hat:    { default:null, leopard:'PATTERN', blue:'#1188cc', green:'#22aa44', purple:'#882299', red:'#cc2222' },
+  uniform:{ default:null, leopard:'PATTERN', blue:'#1188cc', green:'#228844', purple:'#773399', red:'#cc3322' },
+  vest:   { default:null, leopard:'PATTERN', blue:'#1188cc', green:'#22aa44', purple:'#882299', red:'#cc2222' },
+  mop:    { default:null, blue:'#1188cc', green:'#22aa44', purple:'#882299', red:'#cc2222' },
+};
+
+// Leopard is a real two-tone rosette pattern, not a flat recolor — see
+// regenerateCosmeticsTexture() below for how 'PATTERN' is resolved per
+// pixel. Colors picked to read as leopard at small on-screen scale:
+// warm tan base with dark brown/black rosette blotches.
+const LEOPARD_BASE_HSL = (()=>{ const c=hexToRgb('#d9b273'); return rgbToHsl(c.r,c.g,c.b); })();
+const LEOPARD_DARK_HSL = (()=>{ const c=hexToRgb('#3a2414'); return rgbToHsl(c.r,c.g,c.b); })();
+// Cheap layered-sine "blob noise" — no external noise lib available in
+// this environment. Multiple mismatched frequencies keep the blotches
+// irregular rather than forming an obvious repeating grid.
+function leopardSpotValue(x,y){
+  const n = Math.sin(x*0.19)*Math.cos(y*0.23)
+          + Math.sin((x+y*0.6)*0.11)*0.6
+          + Math.sin((x*0.7-y)*0.15)*0.4;
+  return (n+2.0)/4.0; // roughly 0..1
+}
+
+function hexToRgb(hex){
+  const n = parseInt(hex.slice(1), 16);
+  return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
+}
+function rgbToHsl(r,g,b){
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b);
+  let h,s,l=(max+min)/2;
+  if(max===min){ h=s=0; }
+  else{
+    const d=max-min;
+    s = l>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: h=(g-b)/d+(g<b?6:0); break;
+      case g: h=(b-r)/d+2; break;
+      default: h=(r-g)/d+4;
+    }
+    h/=6;
+  }
+  return [h,s,l];
+}
+function hslToRgb(h,s,l){
+  let r,g,b;
+  if(s===0){ r=g=b=l; }
+  else{
+    const hue2rgb=(p,q,t)=>{
+      if(t<0)t+=1; if(t>1)t-=1;
+      if(t<1/6)return p+(q-p)*6*t;
+      if(t<1/2)return q;
+      if(t<2/3)return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    const q = l<0.5 ? l*(1+s) : l+s-l*s;
+    const p = 2*l-q;
+    r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3);
+  }
+  return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+}
+function colorDist(r1,g1,b1,r2,g2,b2){
+  return Math.sqrt((r1-r2)**2 + (g1-g2)**2 + (b1-b2)**2);
+}
+
+function regenerateCosmeticsTexture(cosmetics){
+  if(!baseTextureCanvas || !skinnedMaterial) return;
+  const w = baseTextureCanvas.width, h = baseTextureCanvas.height;
+  const out = document.createElement('canvas'); out.width = w; out.height = h;
+  const octx = out.getContext('2d');
+  octx.drawImage(baseTextureCanvas, 0, 0);
+  const imgData = octx.getImageData(0, 0, w, h);
+  const d = imgData.data;
+
+  // Resolve target HSL (hue, saturation) per garment, or null = leave alone.
+  // Shirt and pants share the same "uniform" region (confirmed they're
+  // The "uniform" region covers both sleeves and pants (confirmed to be
+  // the same blue in the texture, no way to geometrically tell them
+  // apart) — now driven purely by pants, since the separate "shirt"
+  // purchase (sleeves) was removed. Buying pants colors the sleeves too
+  // — that's an accepted, deliberate tradeoff, not a bug.
+  const targets = {};
+  for(const slot of ['hat','uniform','vest','mop']){
+    let equipped;
+    if(slot==='hat') equipped = cosmetics.hat;
+    else if(slot==='vest') equipped = cosmetics.vest;
+    else if(slot==='mop') equipped = cosmetics.mop;
+    else equipped = cosmetics.pants;
+    const hex = COSMETIC_TARGET_HEX[slot][equipped];
+    if(!hex){ targets[slot] = null; continue; } // 'default' - don't touch
+    if(hex==='PATTERN'){ targets[slot] = 'leopard'; continue; }
+    const rgb = hexToRgb(hex);
+    const [th, ts] = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    targets[slot] = { h: th, s: ts };
+  }
+
+  // NOTE: geometric masking (used earlier for the tool/head, and just
+  // tried again here for vest via Spine02) has now failed twice in a
+  // row to correctly isolate a region on this mesh - it paints
+  // SOMEWHERE, but not reliably the intended visible surface, and can
+  // introduce new contamination elsewhere (vest's attempt painted the
+  // mop head). This confirms it's not a Head-specific problem — the
+  // UV atlas on this mesh is too fragmented for triangle-rasterization
+  // masking to work reliably for ANY bone. Reverted; vest-torso remains
+  // an open, unsolved limitation for now (see conversation notes).
+  const matchCounts = { helmet:0, uniform:0, vest:0, mop:0 };
+  let recoloredCount = 0;
+
+  for(let i=0; i<d.length; i+=4){
+    const r=d[i], g=d[i+1], b=d[i+2];
+    const skinDist = colorDist(r,g,b, SKIN_PROTECT.r, SKIN_PROTECT.g, SKIN_PROTECT.b);
+
+    let bestKey=null, bestDist=Infinity;
+    for(const keyName in COSMETIC_KEYS){
+      const k = COSMETIC_KEYS[keyName];
+      const dist = colorDist(r,g,b,k.r,k.g,k.b);
+      if(dist < k.threshold && dist < bestDist){ bestDist = dist; bestKey = keyName; }
+    }
+    if(!bestKey || skinDist < bestDist) continue; // no match, or closer to skin - leave untouched
+    matchCounts[bestKey]++;
+
+    const slot = bestKey==='helmet' ? 'hat' : bestKey; // helmet key -> hat target, others match by name
+    const target = targets[slot];
+    if(!target) continue; // 'default' equipped - leave original texture color as-is
+
+    const [,, l] = rgbToHsl(r,g,b); // keep original lightness (preserves shading/highlights)
+    let nr,ng,nb;
+    if(target==='leopard'){
+      // Pattern instead of flat color: pick tan base vs. dark rosette
+      // per-pixel using the pixel's texture-space coordinates, then
+      // apply the same lightness-preservation as flat colors so
+      // shading/highlights baked into the source texture still show.
+      const px = (i/4) % w, py = Math.floor((i/4)/w);
+      const spotVal = leopardSpotValue(px,py);
+      const pick = spotVal > 0.62 ? LEOPARD_DARK_HSL : LEOPARD_BASE_HSL;
+      [nr,ng,nb] = hslToRgb(pick[0], pick[1], l);
+    } else {
+      [nr,ng,nb] = hslToRgb(target.h, target.s, l);
+    }
+    d[i]=nr; d[i+1]=ng; d[i+2]=nb;
+    recoloredCount++;
+  }
+  console.log('[Cosmetics] helmet='+matchCounts.helmet+' uniform='+matchCounts.uniform+' vest='+matchCounts.vest+' mop='+matchCounts.mop+' | recolored='+recoloredCount+' | hat='+cosmetics.hat+' shirt='+cosmetics.shirt+' vest='+cosmetics.vest+' pants='+cosmetics.pants+' mop='+cosmetics.mop);
+
+  octx.putImageData(imgData, 0, 0);
+  const tex = new THREE.CanvasTexture(out);
+  tex.flipY = skinnedMaterial.map ? skinnedMaterial.map.flipY : false;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  // Disable mipmapping — with a 512x512 texture rendered onto a small
+  // offscreen canvas, THREE.js would otherwise sample a heavily
+  // downsampled mip level. Since the mesh's UV islands are extremely
+  // fragmented, scattered pixel-level color changes get averaged away
+  // to near-invisibility at a coarse mip level, while a 100% uniform
+  // fill survives regardless (nothing to blend into) — exactly
+  // matching the pattern observed: whole-texture recolor always
+  // worked, any partial/scattered recolor never showed up at all.
+  tex.generateMipmaps = false;
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  if(skinnedMaterial.map) skinnedMaterial.map.dispose();
+  skinnedMaterial.map = tex;
+  skinnedMaterial.needsUpdate = true;
+}
+
+function cosmeticsChanged(a, b){
+  if(!a || !b) return true;
+  return a.hat!==b.hat || a.shirt!==b.shirt || a.vest!==b.vest || a.pants!==b.pants || a.mop!==b.mop;
+}
+
+function resetBonesToBindPose(){
+  for(const name in bones){
+    const q = BIND_POSE[name];
+    bones[name].quaternion.set(q[0], q[1], q[2], q[3]);
+  }
+}
+
+// The file's bind pose has both arms extended out to the sides (closer
+// to a T-pose than a natural stance). This corrects that to a relaxed
+// standing pose with arms at the character's sides, used for idle AND
+// as the starting point for the cleaning animation below.
+function applyRestPose(){
+  resetBonesToBindPose();
+  if(bones.RightArm) alignBoneAxis(bones.RightArm, new THREE.Vector3(0.15,-1,0.1), BONE_AXIS);
+  if(bones.LeftArm)  alignBoneAxis(bones.LeftArm,  new THREE.Vector3(-0.15,-1,0.1), BONE_AXIS);
+}
+
+function applyCleaningPose(dt){
+  sweepClock += dt*7; // matches player.sweepPh speed in the main game
+  applyRestPose();
+  const swing = Math.sin(sweepClock); // -1..1, drives the wipe motion
+
+  // Axes anchored to the character's own body (see note above — this
+  // makes the pose correct regardless of which way the character is
+  // currently facing).
+  const charQuat = model.quaternion;
+  const reachAxis = new THREE.Vector3(1,0,0).applyQuaternion(charQuat).normalize(); // sideways — for the forward reach
+  const upAxis    = new THREE.Vector3(0,1,0).applyQuaternion(charQuat).normalize(); // for the side-to-side sweep
+  const twistAxis = new THREE.Vector3(0,0,1).applyQuaternion(charQuat).normalize(); // forward/back — for fanning the arms apart
+
+  // Reference: two-handed pole grip, both arms extended forward at a
+  // shallow angle (not raised up) — right arm reaches further out and
+  // straighter, left arm stays closer to the body with more elbow bend,
+  // like gripping lower down the pole.
+  // Both shoulders reach at the SAME angle now — parallel, like two
+  // hands gripping one straight pole — instead of pointing in slightly
+  // different directions. The two hands differ only in how far each
+  // one grips along that shared line (forearm bend): right hand near
+  // the far end (almost straight arm), left hand pulled back closer
+  // to the body (more elbow bend).
+  if(bones.RightArm)     bones.RightArm.rotateOnWorldAxis(reachAxis, 1.5);
+  if(bones.RightForeArm) bones.RightForeArm.rotateOnWorldAxis(reachAxis, -0.1);
+  if(bones.LeftArm)      bones.LeftArm.rotateOnWorldAxis(reachAxis, 1.5);
+  if(bones.LeftForeArm)  bones.LeftForeArm.rotateOnWorldAxis(reachAxis, -0.55);
+
+  // NOTE: previously this was an ADAPTIVE fan-out that scaled up at
+  // certain facing angles — that's what caused the disconnected/
+  // floating look, since the amount could get large. Now that facing
+  // is locked to one fixed angle during cleaning (above), only ONE
+  // fan amount ever needs to be correct, so this is a small constant
+  // instead of a formula — much lower risk of overshooting.
+  if(bones.RightArm) bones.RightArm.rotateOnWorldAxis(upAxis, -CLEAN_ARM_SEPARATION);
+  if(bones.LeftArm)  bones.LeftArm.rotateOnWorldAxis(upAxis, CLEAN_ARM_SEPARATION);
+
+  // The actual wipe: move the brush UP and DOWN along the panel
+  // surface, by oscillating around the SAME axis used for the base
+  // forward reach (reachAxis) — this changes the arm's vertical angle
+  // back and forth around the base reach position, sliding the tool
+  // tip up/down while staying extended toward the panel, rather than
+  // swinging side to side.
+  if(bones.RightArm)     bones.RightArm.rotateOnWorldAxis(reachAxis, swing*0.4);
+  if(bones.RightForeArm) bones.RightForeArm.rotateOnWorldAxis(reachAxis, swing*0.22);
+  if(bones.LeftArm)      bones.LeftArm.rotateOnWorldAxis(reachAxis, swing*0.4);
+  if(bones.LeftForeArm)  bones.LeftForeArm.rotateOnWorldAxis(reachAxis, swing*0.22);
+
+  // Subtle body rock in sync with the sweep for a bit of weight/effort
+  if(bones.Spine02){
+    bones.Spine02.rotateOnWorldAxis(WORLD_X, swing*0.05);
+  }
+
+  // Tool roll correction: which face of the mop/squeegee touches the
+  // panel depends on the tool's ROLL (rotation around its own length),
+  // not its reach direction. A fixed roll angle only looked right at
+  // one specific facing because the tool's actual current direction
+  // changes with the arm pose above. Fix: compute the tool's real
+  // current world-space direction from the (already-posed) bone
+  // positions, then roll the hand around THAT exact axis — this stays
+  // correct no matter which way the character is facing.
+  if(bones.RightForeArm && bones.RightHand){
+    const foreArmPos = new THREE.Vector3();
+    bones.RightForeArm.getWorldPosition(foreArmPos);
+    const handPos = new THREE.Vector3();
+    bones.RightHand.getWorldPosition(handPos);
+    const toolAxis = handPos.clone().sub(foreArmPos);
+    if(toolAxis.lengthSq() > 1e-6){
+      toolAxis.normalize();
+      bones.RightHand.rotateOnWorldAxis(toolAxis, TOOL_ROLL);
+    }
+  }
+}
+
+function checkAndUpdateCosmetics(){
+  if(!window.__getCosmetics || !ready || !model) return;
+  const current = window.__getCosmetics();
+  if(cosmeticsChanged(lastCosmetics, current)){
+    try{
+      regenerateCosmeticsTexture(current);
+      // Updating the material's texture doesn't by itself redraw the
+      // offscreen 3D scene — that only happens during the normal
+      // per-frame render, which may not run while the game loop is
+      // paused (e.g. Bank menu open). Force one immediately so the
+      // change is actually visible right away, not just correct in
+      // memory.
+      renderer.render(scene3d, camera3d);
+    }catch(e){
+      console.error('[Cosmetics] regenerate failed:', e);
+    }
+    lastCosmetics = current;
+  }
+}
+// Exposed so the classic-script buy/equip functions can trigger an
+// immediate update the moment a purchase happens, rather than waiting
+// for the next per-frame poll — which doesn't run at all while the
+// Bank menu is open (the main game loop pauses), so without this the
+// character wouldn't visibly update until the player closed the shop
+// and the next gameplay frame ran.
+window.__forceCosmeticsUpdate = checkAndUpdateCosmetics;
+
+// DIAGNOSTIC ONLY: tints the ENTIRE character texture bright magenta,
+// bypassing all color-matching/masking logic. Run this from the
+// console to definitively confirm whether texture updates reach the
+// screen at all, independent of whether the color-detection is
+// correctly targeting the right pixels.
+window.__testWholeTextureRecolor = function(){
+  if(!baseTextureCanvas || !skinnedMaterial){
+    console.log('[TEST] Not ready - baseTextureCanvas:', !!baseTextureCanvas, 'skinnedMaterial:', !!skinnedMaterial);
+    return;
+  }
+  const w = baseTextureCanvas.width, h = baseTextureCanvas.height;
+  const out = document.createElement('canvas'); out.width = w; out.height = h;
+  const octx = out.getContext('2d');
+  octx.drawImage(baseTextureCanvas, 0, 0);
+  octx.fillStyle = 'rgba(255,0,255,0.85)';
+  octx.fillRect(0,0,w,h);
+  const tex = new THREE.CanvasTexture(out);
+  tex.flipY = skinnedMaterial.map ? skinnedMaterial.map.flipY : false;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  // Disable mipmapping — with a 512x512 texture rendered onto a small
+  // offscreen canvas, THREE.js would otherwise sample a heavily
+  // downsampled mip level. Since the mesh's UV islands are extremely
+  // fragmented, scattered pixel-level color changes get averaged away
+  // to near-invisibility at a coarse mip level, while a 100% uniform
+  // fill survives regardless (nothing to blend into) — exactly
+  // matching the pattern observed: whole-texture recolor always
+  // worked, any partial/scattered recolor never showed up at all.
+  tex.generateMipmaps = false;
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  if(skinnedMaterial.map) skinnedMaterial.map.dispose();
+  skinnedMaterial.map = tex;
+  skinnedMaterial.needsUpdate = true;
+  renderer.render(scene3d, camera3d);
+  console.log('[TEST] Whole-texture magenta tint applied and rendered. If the character is NOT magenta now, texture updates are not reaching the screen at all.');
+};
+
+// DIAGNOSTIC ONLY: paints ONLY the pixels the head mask thinks are the
+// helmet bright magenta, leaving everything else untouched. Shows
+// exactly which visible part of the character the head mask actually
+// corresponds to — if it's not the hat, that confirms a mask
+// alignment problem specifically, not a render or color-key problem.
+window.__testHeadMaskVisualize = function(){
+  if(!baseTextureCanvas || !skinnedMaterial || !headMaskData){
+    console.log('[TEST] Not ready - baseTextureCanvas:', !!baseTextureCanvas, 'skinnedMaterial:', !!skinnedMaterial, 'headMaskData:', !!headMaskData);
+    return;
+  }
+  const w = baseTextureCanvas.width, h = baseTextureCanvas.height;
+  const out = document.createElement('canvas'); out.width = w; out.height = h;
+  const octx = out.getContext('2d');
+  octx.drawImage(baseTextureCanvas, 0, 0);
+  const imgData = octx.getImageData(0,0,w,h);
+  const d = imgData.data;
+  const hd = headMaskData.data;
+  let painted = 0;
+  for(let i=0;i<d.length;i+=4){
+    if(hd[i] > 128){
+      d[i]=255; d[i+1]=0; d[i+2]=255;
+      painted++;
+    }
+  }
+  octx.putImageData(imgData,0,0);
+  const tex = new THREE.CanvasTexture(out);
+  tex.flipY = skinnedMaterial.map ? skinnedMaterial.map.flipY : false;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  // Disable mipmapping — with a 512x512 texture rendered onto a small
+  // offscreen canvas, THREE.js would otherwise sample a heavily
+  // downsampled mip level. Since the mesh's UV islands are extremely
+  // fragmented, scattered pixel-level color changes get averaged away
+  // to near-invisibility at a coarse mip level, while a 100% uniform
+  // fill survives regardless (nothing to blend into) — exactly
+  // matching the pattern observed: whole-texture recolor always
+  // worked, any partial/scattered recolor never showed up at all.
+  tex.generateMipmaps = false;
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  if(skinnedMaterial.map) skinnedMaterial.map.dispose();
+  skinnedMaterial.map = tex;
+  skinnedMaterial.needsUpdate = true;
+  renderer.render(scene3d, camera3d);
+  console.log('[TEST] Head mask visualized -', painted, 'pixels painted magenta. Check which part of the character is magenta now.');
+};
+
+// DIAGNOSTIC ONLY: paints every pixel that currently matches a given
+// COSMETIC_KEYS color-key bright magenta, leaving everything else
+// normal — shows exactly what region of the character each color key
+// is really capturing. Usage from console: __testColorKey('vest'),
+// __testColorKey('hat'), __testColorKey('uniform'), __testColorKey('mop')
+function showTestBanner(msg){
+  let el = document.getElementById('__testBanner');
+  if(!el){
+    el = document.createElement('div');
+    el.id = '__testBanner';
+    el.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#000;color:#0f0;font:14px monospace;padding:10px 16px;border:2px solid #0f0;border-radius:8px;z-index:99999;max-width:90vw;text-align:center;';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+window.__testColorKey = function(keyName){
+  if(keyName === 'hat') keyName = 'helmet'; // alias - the internal color key is named "helmet", but "hat" is the more natural thing to type
+  if(!baseTextureCanvas || !skinnedMaterial){
+    console.log('[TEST] Not ready');
+    showTestBanner('TEST NOT READY - character not loaded yet');
+    return;
+  }
+  const k = COSMETIC_KEYS[keyName];
+  if(!k){
+    console.log('[TEST] Unknown key. Use one of:', Object.keys(COSMETIC_KEYS).join(', '));
+    showTestBanner('UNKNOWN KEY: '+keyName);
+    return;
+  }
+  const w = baseTextureCanvas.width, h = baseTextureCanvas.height;
+  const out = document.createElement('canvas'); out.width = w; out.height = h;
+  const octx = out.getContext('2d');
+  octx.drawImage(baseTextureCanvas, 0, 0);
+  const imgData = octx.getImageData(0,0,w,h);
+  const d = imgData.data;
+  let painted = 0;
+  for(let i=0;i<d.length;i+=4){
+    const r=d[i], g=d[i+1], b=d[i+2];
+    const dist = colorDist(r,g,b,k.r,k.g,k.b);
+    if(dist < k.threshold){
+      d[i]=255; d[i+1]=0; d[i+2]=255;
+      painted++;
+    }
+  }
+  octx.putImageData(imgData,0,0);
+  const tex = new THREE.CanvasTexture(out);
+  tex.flipY = skinnedMaterial.map ? skinnedMaterial.map.flipY : false;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  // Disable mipmapping — with a 512x512 texture rendered onto a small
+  // offscreen canvas, THREE.js would otherwise sample a heavily
+  // downsampled mip level. Since the mesh's UV islands are extremely
+  // fragmented, scattered pixel-level color changes get averaged away
+  // to near-invisibility at a coarse mip level, while a 100% uniform
+  // fill survives regardless (nothing to blend into) — exactly
+  // matching the pattern observed: whole-texture recolor always
+  // worked, any partial/scattered recolor never showed up at all.
+  tex.generateMipmaps = false;
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  if(skinnedMaterial.map) skinnedMaterial.map.dispose();
+  skinnedMaterial.map = tex;
+  skinnedMaterial.needsUpdate = true;
+  showTestBanner('TEST RAN: '+keyName+' - '+painted+' pixels painted magenta (look for magenta on the character)');
+  renderer.render(scene3d, camera3d);
+  console.log('[TEST] Color key "'+keyName+'" ('+k.r+','+k.g+','+k.b+' thresh '+k.threshold+') visualized -', painted, 'pixels painted magenta.');
+};
+
+window.__update3DPlayer = function(dt, state){
+  if(!ready || !model) return;
+  const {moving, sweeping, face} = state;
+
+  // Cosmetics: cheap to check every frame (just 4 string comparisons),
+  // only regenerates the texture (the actually expensive part) when
+  // something changed since the last check.
+  checkAndUpdateCosmetics();
+
+  // Facing follows the real movement/approach direction, including
+  // while cleaning — a locked fixed angle was tried here but made the
+  // character face an unnatural direction regardless of which side of
+  // the panel they approached from, which looked worse than the arm
+  // visibility issue it was meant to fix.
+  if(moving){
+    let f = face;
+    // Down+Left is a special case: it's the exact mathematical midpoint
+    // between "Down" and "Left", which happens to land precisely on the
+    // model's neutral pose. Calculated from actual screenshots: the
+    // previous +180° correction overshot and showed the character's
+    // back instead. +90° correctly mirrors the confirmed-working
+    // Right+Down direction. Only this one specific direction is
+    // affected — the other 7 are untouched.
+    if(Math.abs(face - Math.PI/2) < 0.05){
+      f = face + Math.PI/2;
+    }
+    model.rotation.y = -f + FACE_OFFSET;
+  }
+
+  if(sweeping){
+    applyCleaningPose(dt);
+    walkWeight = Math.max(0, walkWeight - dt*4);
+    if(mixer && walkAction) walkAction.setEffectiveWeight(walkWeight);
+  } else if(moving){
+    walkWeight = Math.min(1, walkWeight + dt*4);
+    if(mixer && walkAction){
+      walkAction.setEffectiveWeight(walkWeight);
+      mixer.update(dt);
+    }
+  } else {
+    walkWeight = Math.max(0, walkWeight - dt*4);
+    if(mixer && walkAction) walkAction.setEffectiveWeight(walkWeight);
+    if(walkWeight <= 0.001){
+      applyRestPose();
+    } else if(mixer){
+      mixer.update(dt);
+    }
+  }
+
+  renderer.render(scene3d, camera3d);
+};
+
+window.__draw3DPlayer = function(ctx, screenX, screenY, scaleOverride){
+  if(!ready) return false;
+  const s = scaleOverride || CHARACTER_SCALE;
+  const drawW = RENDER_W*s, drawH = RENDER_H*s;
+  const topY = screenY - drawH*FOOT_ANCHOR;
+  ctx.drawImage(offCanvas, screenX - drawW/2, topY, drawW, drawH);
+  return true;
+};
 </script>
 </body>
 </html>
