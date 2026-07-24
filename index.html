@@ -7171,11 +7171,17 @@ window.__update3DPlayer = function(dt, state){
   renderer.render(scene3d, camera3d);
 };
 
+// Small permanent downward nudge so the character's head/helmet clears
+// the top-left HUD (score/timer/water/salt boxes) when standing near the
+// back rows. A fixed constant, always applied — no dynamic overlap
+// detection, since that approach caused snapping/fade issues before.
+const CHARACTER_Y_NUDGE = 12; // px, tune here if still too high/low
+
 window.__draw3DPlayer = function(ctx, screenX, screenY, scaleOverride){
   if(!ready) return false;
   const s = scaleOverride || CHARACTER_SCALE;
   const drawW = RENDER_W*s, drawH = RENDER_H*s;
-  const topY = screenY - drawH*FOOT_ANCHOR;
+  const topY = screenY - drawH*FOOT_ANCHOR + CHARACTER_Y_NUDGE;
   ctx.drawImage(offCanvas, screenX - drawW/2, topY, drawW, drawH);
   return true;
 };
