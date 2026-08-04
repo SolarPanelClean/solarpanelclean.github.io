@@ -6229,11 +6229,29 @@ function shiftForKeyboard(inputEl){
   if(!fixedAncestor){ inputEl.scrollIntoView({block:'center', behavior:'smooth'}); return; }
   var kbHeight = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
   if(kbHeight > 80){ // a real keyboard is showing, not just a rounding blip
+    // Always measure from the untransformed position first — otherwise a
+    // previously-applied shift gets compounded into the new measurement
+    // on every resize event (e.g. Samsung's split keyboard, which fires
+    // viewport resize events as it docks to each screen edge).
+    var prevTransform = fixedAncestor.style.transform;
+    fixedAncestor.style.transform = '';
     var rect = inputEl.getBoundingClientRect();
-    var overlap = rect.bottom - (window.visualViewport.height - 12);
-    var shift = Math.max(0, overlap);
+    var visTop = window.visualViewport.offsetTop;
+    var visBottom = visTop + window.visualViewport.height;
+    var margin = 12;
+    var shift = 0;
+    if(rect.bottom > visBottom - margin){
+      // Input hidden below the keyboard — shift the overlay UP.
+      shift = -(rect.bottom - (visBottom - margin));
+    } else if(rect.top < visTop + margin){
+      // Input scrolled entirely ABOVE the visible viewport — this is the
+      // Samsung split-keyboard case, where the OS shrinks the visible
+      // area from the top instead of just docking a keyboard at the
+      // bottom. Shift the overlay DOWN to bring it back into view.
+      shift = (visTop + margin) - rect.top;
+    }
     fixedAncestor.style.transition = 'transform 0.2s ease';
-    fixedAncestor.style.transform = shift>0 ? 'translateY(-'+shift+'px)' : '';
+    fixedAncestor.style.transform = shift ? 'translateY('+shift+'px)' : '';
   } else {
     fixedAncestor.style.transform = '';
   }
